@@ -3,10 +3,10 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Coustard', serif;
+	font-family: 'Wicked-Grit', serif;
+	letter-spacing: -1px;
 	margin: 10px 0;
 	font-weight: 400;
-	/*letter-spacing: -1px;*/
 }
 
 h1 {
@@ -15,9 +15,11 @@ h1 {
 }
 
 h2 {
-	padding-bottom: 10px;
-	font-size: 28px;
 	background: url('../images/bg_hr.png') repeat-x bottom;
+	font-size: 28px;
+	text-transform: uppercase;
+	color: #b9a360;
+	padding-bottom: 10px;
 }
 
 h3 {
@@ -40,6 +42,15 @@ p {
 	margin: 10px 0 15px 0;
 }
 
+a {
+	color: #d19020;
+}
+
+a:hover {
+	color: #b5670b;
+	cursor: pointer;
+}
+
 .container {
 	max-width: 970px;
 }
@@ -52,75 +63,36 @@ p {
 }
 
 header, footer {
-	background: url('../images/bg.png') top center #161c30;
-	background-size: 1920px auto;
 	padding: 20px 0px;
 	color: #8A92B2;
 	color: #fafafa;
 }
 
 header {
-	border-bottom: 3px solid #eb453e;
-}
-
-header .logo {
-	height: 30px;
-	width: auto;
-	margin-top: 30px;
-	margin-left: 10px;
-}
-
-header .logo-tall {
-	width: 300px;
-	height: auto;
-	margin-top: -30px;
-	margin-bottom: -30px;
-}
-
-header h1 {
-	font-family: 'Coustard', serif;
-	font-family: 'Holtwood One SC', serif;
-	margin: 20px 0 0 0;
-	color: #fff;
-	font-size: 42px;
-	font-weight: 300;
-	/*text-transform: lowercase;*/
-	text-transform: uppercase;
-	text-shadow: #111 0px 0px 10px;
-}
-
-header h2 {
-	font-family: 'Coustard', serif;
-	font-size: 24px;
-	font-weight: 300;
-	background: none;
-	margin: 10px 0;
-	padding-bottom: 10px;
-	text-shadow: #111 0px 0px 10px;
+	height: 1000px;
+	background: url('../images/header.jpg') top center no-repeat;
+	background-size: 1920px auto;
 }
 
 #block-content {
-	background: #0e0e0e;
-	background: #161c30;
+	background: #1f0c05;
 	padding-top: 10px;
 	padding-bottom: 15px;
-	border-bottom: 3px solid #8A92B2;
-	color: #007edf;
 }
 
 #block-content h6 {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 900;
 	text-transform: uppercase;
-	color: #fefefe;
+	letter-spacing: 0px;
+	color: #b9a360;
 	margin-bottom: 0px;
 }
 
 #block-content span {
 	font-family: 'Source Sans Pro', sans-serif;
 	font-size: 18px;
-	/*color: #fff;*/
-	color: #8A92B2;
+	color: #F6E6CC;
 	font-smooth: auto;
 	-webkit-font-smoothing: subpixel-antialiased;
 	-moz-font-smoothing: subpixel-antialiased;
@@ -128,7 +100,8 @@ header h2 {
 
 .main-content {
 	padding-top: 40px;
-	/*background: #dfd0af;*/
+	color: #F6E6CC;
+	background: #1f0c05;
 }
 
 ul {
@@ -145,15 +118,13 @@ ul {
 }
 
 pre, code {
-	background: #fff;
+	background: #F6E6CC;
 }
 
 footer {
+	background: url('../images/bg-footer.png') top center #161c30;
+	background-size: 1920px auto;
 	font-size: 14px;
 	border-top: 3px solid #eb453e;
-	color: #8A92B2;
+	color: #F6E6CC;
 }
-
-/*footer img {
-	height: 40px;
-}*/
