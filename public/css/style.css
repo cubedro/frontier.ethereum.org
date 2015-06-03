@@ -88,13 +88,54 @@ header {
 	align-items: center;
 }
 
+div.scrollme.intro {
+	background: #1f0c05;
+	overflow: hidden;
+}
+
+div.scrollme.row.introduction {
+	height: 70vh;
+	min-height: 440px;
+	background: url('../images/Frontier-Background.jpg') center center no-repeat;
+	background-size: cover;	
+	padding-top: 50px;
+}
+
+.introduction h1 {
+	background: url('../images/Title+Logo.png') top center no-repeat;
+	background-size: 250px 323px;
+	height: 0;
+	padding-top: 323px;
+	overflow: hidden;
+}
+
 header:after {
 	content: " ";
 	background: linear-gradient(transparent, #1f0c05);
-	z-index: 100;
 	height: 100px;
 	position: absolute;	
 	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.main-content:before {
+	content: " ";
+	background: linear-gradient(transparent, #1f0c05);
+	height: 100px;
+	position: absolute;	
+	top: -100px;
+	left: 0;
+	right: 0;
+}
+
+
+.main-tutorial.part1:before {
+	content: " ";
+	background: linear-gradient(#D07331, rgba(230,160,70,.1), transparent);
+	height: 400px;
+	position: absolute;	
+	top: 0;
 	left: 0;
 	right: 0;
 }
@@ -109,7 +150,7 @@ header .title {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2) {
-	header .title {
+	.introduction h1 , header .title {
 		background-image: url('../images/Title+Logo@2x.png');
 	}	
 }
@@ -186,11 +227,160 @@ header .title {
 	padding-top: 40px;
 	color: #F6E6CC;
 	background: #1f0c05;
+	position: relative;
 }
 
-ul {
-	padding-left: 20px;
+
+.main-tutorial {
+	background: #EFE6C4;
+	font-family: "Source Sans Pro";
+	font-size: 18px;
+	color: #443A37;
+	position: relative;
+	display: none;
 }
+
+/*
+.main-tutorial.part2 {
+	background: #FFB51A;
+}
+
+.main-tutorial.part3 {
+	background: #D54839;
+}
+
+.main-tutorial.part4 {
+	background: #EFE6C4;
+}*/
+
+.main-tutorial p {
+	padding: 0 20px 0;
+}
+
+/*
+.main-tutorial h2 {
+	font-family: "Wicked-Grit";
+	font-size: 48px;
+	color: #443A37;
+	background: transparent;
+	padding: 80px 20px 40px;
+}
+*/
+.main-tutorial h2 {
+	font-family: "Roboto Slab";
+	font-size: 48px;
+	text-transform: uppercase;
+	font-weight: 900;
+	color: #443A37;
+	background: transparent;
+	padding: 80px 20px 40px;
+}
+
+.main-tutorial h3 {
+	font-family: "Roboto Slab";
+	font-size: 36px;
+	font-weight: 500;
+	color: #443A37;
+	background: transparent;
+	padding: 60px 20px 30px;
+}
+
+.main-tutorial h4 {
+	font-family: "Source Sans Pro";
+	font-size: 24px;
+	font-weight: 600;
+	padding: 40px 20px 20px;	
+}
+
+.main-tutorial h2 + h3 {
+	padding-top: 0;
+	margin-top: -50px
+}
+
+.main-tutorial h3 + h2 {
+	padding-top: 0;
+	margin-top: -50px
+}
+
+.main-tutorial .row {
+	padding: 200px 0 60px;
+}
+
+.main-tutorial .note {
+	font-weight: 600;
+}
+
+.main-tutorial code,
+div.code {
+	background: #F5F2E6;
+	font-family: "Source Code pro", "Courier New", monospace;
+	white-space: pre;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 30px 20px;
+	margin: 30px 0;
+	border: solid 4px #D6CDAB;
+	overflow: auto;
+}
+
+/*ul {
+	padding-left: 20px;
+}*/
+
+ul#toc {
+	position: fixed;
+	top: 10px;
+	right:10px;
+	width: 220px;
+	z-index: 10;
+	padding: 10px;
+	font-size: 16px;
+	font-weight: 600;
+	float: right;
+	opacity: 0;
+}
+
+ul#toc ul {
+	padding-left: 5px;
+}
+
+ul#toc li {
+	list-style-type: none;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	border-top: dotted 1px #E9BEA1;
+	padding: 3px 0 4px 5px;
+}
+
+ul#toc li:first-child {
+	border-top: none;
+}
+
+ul#toc li a {
+	color: #D54839;
+}
+
+ul#toc > li {
+	text-transform: uppercase;
+}
+
+ul#toc > li > ul {
+	border-left: solid 3px #D54839;
+}
+
+ul#toc > li > ul > li  {
+	text-transform: none;
+	font-weight: 500;
+}
+
+ul#toc > li > ul > li > ul > li  {
+	text-transform: none;
+	font-weight: 300;
+	font-size: 15px;
+}
+
+
 
 .terms-checkbox {
 	margin-right: 30px;

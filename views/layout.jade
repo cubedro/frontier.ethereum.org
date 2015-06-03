@@ -20,5 +20,22 @@ html
 
     script(src="/js/jquery-1.11.2.min.js")
     script(src="/js/bootstrap.min.js")
-    script(src="/js/highlight.pack.js")
+    script(src="/js/jquery.scrollme.min.js")
     script(src="/js/script.js")
+    script(src="/js/jquery.tableofcontents.min.js")
+
+    script
+        | $(document).ready(function(){ 
+        |     $("#toc").tableOfContents(
+        |       $(".main-tutorial"),      // Scoped to div#wrapper
+        |       {
+        |         startLevel: 2,    // H2 and up
+        |         depth:      3    // H2 through H4,
+        |       }
+        |     ); 
+        |   });
+        | var el = $("div.main-tutorial.part1");
+        | var handler = onVisibilityChange(el);
+        | //jQuery
+        | $(window).on('DOMContentLoaded load resize scroll', handler); 
+        | $("input#understand").click($(".main-tutorial").show()); 
