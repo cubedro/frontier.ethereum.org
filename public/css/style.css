@@ -132,8 +132,8 @@ header:after {
 
 .main-tutorial.part1:before {
 	content: " ";
-	background: linear-gradient(#D07331, rgba(230,160,70,.1), transparent);
-	height: 400px;
+	background: linear-gradient(#D9B177, rgba(210,170,120,.1), transparent);
+	height: 300px;
 	position: absolute;	
 	top: 0;
 	left: 0;
@@ -174,6 +174,12 @@ header .title {
 		background-size: 375px 484px;
 		height: 700px;
 		padding-left: 484px;	
+	}
+}
+
+@media only screen and (max-width: 1400px) {
+	.container {
+		padding-right: 200px;
 	}
 }
 
@@ -240,6 +246,17 @@ header .title {
 	display: none;
 }
 
+
+.main-tutorial.part0 {
+	color: #EFE6C4;
+	background: #D54839;
+}
+
+.main-tutorial.part0 h2 ,
+.main-tutorial.part0 h3 {
+	color: #EFE6C4;
+}
+
 /*
 .main-tutorial.part2 {
 	background: #FFB51A;
@@ -257,6 +274,10 @@ header .title {
 	padding: 0 20px 0;
 }
 
+.center-align {
+	text-align: center;
+}
+
 /*
 .main-tutorial h2 {
 	font-family: "Wicked-Grit";
@@ -267,7 +288,7 @@ header .title {
 }
 */
 .main-tutorial h2 {
-	font-family: "Roboto Slab";
+	/*font-family: "Roboto Slab";*/
 	font-size: 48px;
 	text-transform: uppercase;
 	font-weight: 900;
@@ -306,12 +327,22 @@ header .title {
 	padding: 200px 0 60px;
 }
 
+.start-menu {
+	-webkit-perspective: 2000;
+	-moz-perspective: 2000;
+	perspective: 2000;
+}
+
+.main-tutorial .row.start-menu {
+	padding-top: 0;
+}
+
 .main-tutorial .note {
 	font-weight: 600;
 }
 
-.main-tutorial code,
-div.code {
+.main-tutorial code {
+	display: block;
 	background: #F5F2E6;
 	font-family: "Source Code pro", "Courier New", monospace;
 	white-space: pre;
@@ -380,7 +411,14 @@ ul#toc > li > ul > li > ul > li  {
 	font-size: 15px;
 }
 
+ul#toc.light li a {
+	color: #EFE6C4;
+}
 
+ul#toc.light ul, 
+ul#toc.light li  {
+	border-color: #EFE6C4;
+}
 
 .terms-checkbox {
 	margin-right: 30px;

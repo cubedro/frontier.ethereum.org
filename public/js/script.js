@@ -1,3 +1,11 @@
+$(document).ready(function() {
+  $('code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+
+
+
 function isElementInViewport (el) {
 
     //special bonus for those using jQuery
@@ -16,32 +24,13 @@ function isElementInViewport (el) {
 function onVisibilityChange (el, callback) {
     return function () {
         /*your code here*/ console.log('visibility: ' + isElementInViewport(el));
-        //for(var i = 1; i < 3; i++) {
-	  //       if (isElementInViewport($("div.main-tutorial.part" + i))) {
-			// 	$("ul#toc > li:nth-child("+i+")").show();
-			// } else {
-			// 	$("ul#toc > li:nth-child("+i+")").hide();
-			// }        	
-        //}
-
-    	if (isElementInViewport($("div.main-tutorial.part1"))) {
-			$("ul#toc > li:nth-child(1) ul").show(400);
-		} else {
-			$("ul#toc > li:nth-child(1) ul").hide(400);
-		} 
-
-    	if (isElementInViewport($("div.main-tutorial.part2"))) {
-			$("ul#toc > li:nth-child(2) ul").show(400);
-		} else {
-			$("ul#toc > li:nth-child(2) ul").hide(400);
-		} 
-
-    	if (isElementInViewport($("div.main-tutorial.part3"))) {
-			$("ul#toc > li:nth-child(3) ul").show(400);
-		} else {
-			$("ul#toc > li:nth-child(3) ul").hide(400);
-		}  
-
+        for(var i = 0; i <= 3; i++) {
+	        if (isElementInViewport($("div.main-tutorial.part" + i))) {
+				$("ul#toc > li:nth-child("+(i+1)+") ul").show(400);
+			} else {
+				$("ul#toc > li:nth-child("+(i+1)+") ul").hide(200);
+			}        	
+        }
     }
 }
 
