@@ -1,3 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,300,300italic,700|Roboto+Mono:400,700);
+
+
+
 body {
 	-webkit-font-smoothing: antialiased;
 }
@@ -221,7 +225,7 @@ header .title {
 }
 
 #block-content span {
-	font-family: 'Source Sans Pro', sans-serif;
+	font-family: 'Roboto', 'Source Sans Pro', sans-serif;
 	font-size: 18px;
 	color: #F6E6CC;
 	font-smooth: auto;
@@ -239,7 +243,7 @@ header .title {
 
 .main-tutorial {
 	background: #EFE6C4;
-	font-family: "Source Sans Pro";
+	font-family: 'Roboto', 'Source Sans Pro', sans-serif;
 	font-size: 18px;
 	color: #443A37;
 	position: relative;
@@ -298,7 +302,7 @@ header .title {
 }
 
 .main-tutorial h3 {
-	font-family: "Roboto Slab";
+	font-family:'Roboto Slab', serif;;
 	font-size: 36px;
 	font-weight: 500;
 	color: #443A37;
@@ -307,8 +311,7 @@ header .title {
 }
 
 .main-tutorial h4 {
-	font-family: "Source Sans Pro";
-	font-size: 24px;
+	font-family: 'Roboto', sans-serif;	font-size: 24px;
 	font-weight: 600;
 	padding: 40px 20px 20px;	
 }
@@ -344,7 +347,7 @@ header .title {
 .main-tutorial code {
 	display: block;
 	background: #F5F2E6;
-	font-family: "Source Code pro", "Courier New", monospace;
+	font-family: 'Roboto Mono', "Source Code pro", "Courier New", monospace;
 	white-space: pre;
 	font-size: 14px;
 	font-weight: 600;
