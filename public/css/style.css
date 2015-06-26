@@ -336,6 +336,19 @@ header .title {
 	perspective: 2000;
 }
 
+.start-menu strong {
+	display: block;
+}
+
+.start-menu p {
+	padding: 0;
+	font-size: 80%;
+}
+
+.start-menu p strong {
+	font-size: 125%;
+}
+
 .main-tutorial .row.start-menu {
 	padding-top: 0;
 }

@@ -68,65 +68,8 @@ block content
         br
 
   div.main-tutorial.part0
-    div.container
-      div.row.scrollme
-        div.col-md-12.tutorial.animateme(data-when="enter", data-from="0.8", data-to="0.5", data-opacity="0", data-translatey="200")
-
-          h2 TL:DR; Quick Start          
-
-          p Ethereum is an exciting new technology for developers and this guide will take you through the process of creating decentralized applications. But if you're in a hurry and want simply to get your ether ASAP, here's the quick summary:
-
-          h4 Install
-
-          p Open your terminal/console and run this command 
-
-          code ruby -e "$(curl -fsSL https://raw.githubusercontent.com/cubedro/frontier.ethereum.org/ master/bin/install.rb)"
-
-          h4 Access the presale ether
-
-          p #[strong Frontier is a test net, the safest place to keep your ether is not touch them]. But if you participated in the presale and really know what to do, use this to unlock it.
-
-          code geth wallet import /path/to/my/presale.wallet
-          
-          h4 Start Console
-
-          p The Geth console is where you do most of the magic in Ethereum Frontier.
-
-          code geth console 2>>geth.log
-            | admin.newAccount()
-  
-          h4 Send ether to another address
-
-          p Once you are in the console, execute this to send ether to other addresses.
-
-          code var recipient = "0x00000" // add here the address of the recipient
-            | var amount = 1; // amount in ether
-            | eth.sendTransaction({from: eth.accounts[0], to: recipient, value: web3.toWei(amount, "ether")})
-
-
-      div.row.scrollme.start-menu
-        h3.center-align Start your adventure
-
-        div.col-md-4.center-align.animateme(data-when="span", data-from="0.6", data-to="0.15", data-rotatex="70", data-opacity="0")
-          a(href='#part1')
-            img(src='images/sign.png', width='150')
-          p   
-            strong Set up: 
-            | Master the basics of the Geth JavaScript console
-        
-        div.col-md-4.center-align.animateme(data-when="span", data-from="0.6", data-to="0.20", data-rotatex="80", data-opacity="0")
-          a(href='#part2')
-            img(src='images/cabin.png', width='150')
-          p   
-            strong Interact: 
-            | Mine Ether, send transactions and register a name 
-        
-        div.col-md-4.center-align.animateme(data-when="span", data-from="0.6", data-to="0.25", data-rotatex="90", data-opacity="0")
-          a(href='#part3')
-            img(src='images/castle.png', width='150')
-          p   
-            strong Contracts:  
-            | Issue a coin, create a crowdsale, recode democracy
+    div.container   
+      include ./includes/tldr.jade 
 
   div.main-tutorial.part1
     div.container
