@@ -1,0 +1,208 @@
+div.main-tutorial
+  div.container
+    div.row
+      div.col-md-12.tutorial.scrollme
+
+        h2.animateme(data-when="enter", data-from="0.7", data-to="0.1", data-opacity="0", data-translatey="200") WHAT CAN I DO WITH ETHEREUM FRONTIER RELEASE?
+
+        h3.center.animateme(data-when="enter", data-from="0.8", data-to="0.2", data-opacity="0", data-translatey="200") Well it depends on what you want. Here are some recipe ideas:
+
+div.main-tutorial.even#install-geth
+  div.container   
+    div.row
+      div.col-md-12
+
+        figure.geth.scrollme
+          div.geth-background.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatex="100")
+          div.geth-logo.animateme(data-when="enter", data-from="0.7", data-to="0.6", data-opacity="0")
+
+        h3 
+         div.number 1 
+         | Run and Setup 
+         strong Geth
+         | , the Command Line Interface
+
+        p Geth is the main tool of the Frontier release. You can use it to test the network, send ether (the network’s internal currency),  execute contracts, unlock your pre-sale ether or make your computer into a supporting node to earn ether (ie. “mining”).
+
+        button install Geth 
+
+        div.recipe
+          h4 You'll need:
+          ul
+            li 
+              input(type="checkbox") 
+              | Know how to use a command like interface 
+            li 
+              input(type="checkbox") 
+              |  500 Mb free space (for the blockchain) 
+            li 
+              input(type="checkbox") 
+              |  Not being afraid of simple coding
+            li 
+              input(type="checkbox") 
+              |  One of the below:
+              ul
+                li 
+                  input(type="checkbox") 
+                  |  an active Github account, or..
+                li 
+                  input(type="checkbox") 
+                  |  computer with a good dedicated graphics card, or...
+                li 
+                  input(type="checkbox") 
+                  em if you participated in the presale, 
+                  | the .json file you downloaded after contributing, or… 
+                li 
+                  input(type="checkbox") 
+                  |  a friend that can give you ether 
+
+div.main-tutorial
+  div.container   
+    div.row
+      div.col-md-12.tutorial
+          figure.greeter.scrollme
+            div.greeter-human.animateme(data-when="enter", data-from="0.4", data-to="0.1", data-opacity="0", data-translatex="-200")
+            div.greeter-robot.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatex="200")
+            div.greeter-question.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0")
+            div.greeter-answer.animateme(data-when="enter", data-from="0.9", data-to="0.6", data-opacity="0")
+
+          h3 
+           div.number 2 
+           | Create the Greeter, your first live contract
+
+          p The greeter is a very simple contract that greets “Hello” when you poke it. It can also be updated into a Joke Telling contract.
+
+
+          button Summon the Greeter 
+
+          div.recipe
+            h4 You'll need:
+            ul
+              li 
+                input(type="checkbox") 
+                a(href="#install-geth") Geth 
+              li 
+                input(type="checkbox") 
+                |  Desire to learn new things  
+              li 
+                input(type="checkbox") 
+                |  0.01 ether (approximatelly)
+              li 
+                input(type="checkbox") 
+                |  1 "knock knock" joke (optional)
+
+
+
+div.main-tutorial.even#crypto-currency
+  div.container   
+    div.row
+      div.col-md-12
+
+        figure.coin.scrollme
+          div.coin-background.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatey="200")
+
+        h3 
+         div.number 3 
+         | Design and issue your own cryptocurrency
+
+        p Create a tradeable token that can be used as a currency, a digital representation of an asset, a virtual share or anything you want. These tokens are compatible with the wallet and any ethereum-based exchange. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
+
+        button Issue your cryptocurrency 
+
+        div.recipe
+          h4 You'll need:
+          ul
+            li 
+              input(type="checkbox") 
+              a(href="#install-geth") Geth 
+            li 
+              input(type="checkbox") 
+              |  Very basic programming skills 
+            li 
+              input(type="checkbox") 
+              |  0.02 ether (approximatelly)
+            li 
+              input(type="checkbox") 
+              |  1 cool coin name (optional)
+
+div.main-tutorial#crowdsale
+  div.container   
+    div.row
+      div.col-md-12.tutorial
+          figure.crowdsale.scrollme
+            div.crowdsale-background.animateme(data-when="enter", data-from="0.4", data-to="0.1", data-opacity="0", data-translatey="2200")
+
+          h3 
+           div.number 4 
+           | Kickstart a project with a trustless crowdsale
+
+          p Are you already full of ideas to develop things in ethereum? Maybe now you need some help and some funds to do that, but who would give money to someone they don’t trust? Using Ethereum you can create a contract that will hold contributors money until either a specific date is reached or until a given amount is reached. All without requiring a central service provider, a clearing house or having to trust anyone. 
+
+          p You can even use the token you just created to keep track of ownership of prizes.
+
+
+          button Kickstart your project 
+
+          div.recipe
+            h4 You'll need:
+            ul
+              li 
+                input(type="checkbox") 
+                a(href="#install-geth") Geth 
+              li 
+                input(type="checkbox") 
+                | Basic programming skills 
+              li 
+                input(type="checkbox") 
+                | 0.04 ether (approximatelly)
+              li 
+                input(type="checkbox") 
+                a(href="#crypto-currency") any ethereum-based cryptocurrency 
+              li 
+                input(type="checkbox") 
+                | 1 good idea that needs funding
+
+
+div.main-tutorial.even
+  div.container   
+    div.row
+      div.col-md-12
+
+        figure.dao.scrollme
+          div.dao-background.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatey="200")
+
+        h3 
+         div.number 5 
+         | Create a democratic autonomous organization
+
+        p Now you have an idea, the funds and a lot of backers, what’s next? You have to now to hire managers, find a trustable CFO to handle the funds, do board meetings, do a bunch of paperwork. Or you can simply leave that to an ethereum contract. It will accept proposals by any of your contributors and then put it them all to a transparent vote.
+
+        p One of the advantadges of having a robot run your organization is that it is immune to any outside influence and it’s guaranteed to execute only what it is programmed to do. Also your organization will never go offline or disappear and will always be available as long as the network exists.
+
+        button Start your organization 
+
+        div.recipe
+          h4 You'll need:
+          ul
+            li 
+              input(type="checkbox") 
+              a(href="#install-geth") Geth 
+            li 
+              input(type="checkbox") 
+              | Basic programming skills 
+            li 
+              input(type="checkbox") 
+              | 0.08 ether to create the contract (plus however much you want to 
+              a(href="#crowdsale")  fund it with
+              | )
+            li 
+              input(type="checkbox") 
+              a(href="#crypto-currency") any ethereum-based cryptocurrency 
+            li 
+              input(type="checkbox") 
+              | A bunch of ideas on where to spend your funds
+            li 
+              input(type="checkbox") 
+              | Friends to vote on these ideas (optional)
+
+

@@ -7,7 +7,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Wicked-Grit', serif;
+	font-family: 'Wicked-Grit', Arial, sans-serif serif;
 	letter-spacing: -1px;
 	margin: 10px 0;
 	font-weight: 400;
@@ -19,11 +19,10 @@ h1 {
 }
 
 h2 {
-	background: url('../images/bg_hr.png') repeat-x bottom;
-	font-size: 28px;
+	font-size: 30px;
 	text-transform: uppercase;
-	color: #b9a360;
-	padding-bottom: 10px;
+	color: #F9D774;
+	padding-bottom: 30px;
 }
 
 h3 {
@@ -47,7 +46,7 @@ p {
 }
 
 a {
-	color: #d19020;
+	color: #D13C15;
 }
 
 a:hover {
@@ -55,8 +54,31 @@ a:hover {
 	cursor: pointer;
 }
 
+.float-right {
+	float:right;
+	margin-left: 30px;
+	padding-bottom: 30px;
+	/*clear: both;*/	
+}
+
+.float-left {
+	float: left;
+	margin-right: 30px;
+	padding-bottom: 30px;	
+}
+
+.center { 
+	text-align: center;
+	max-width: none !important;
+}
+
+.clear {
+	margin-bottom: 120px;
+}
+
 .container {
 	max-width: 970px;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
 }
 
 .btn {
@@ -153,6 +175,10 @@ header .title {
 	overflow: hidden;
 }
 
+div.whatis {
+	padding: 100px 0;
+}
+
 @media (-webkit-min-device-pixel-ratio: 2) {
 	.introduction h1 , header .title {
 		background-image: url('../images/Title+Logo@2x.png');
@@ -186,6 +212,8 @@ header .title {
 		padding-right: 200px;
 	}
 }
+
+
 
 .status-bar {
 	display: -webkit-flex;
@@ -225,7 +253,7 @@ header .title {
 }
 
 #block-content span {
-	font-family: 'Roboto', 'Source Sans Pro', sans-serif;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
 	font-size: 18px;
 	color: #F6E6CC;
 	font-smooth: auto;
@@ -242,24 +270,22 @@ header .title {
 
 
 .main-tutorial {
-	background: #EFE6C4;
-	font-family: 'Roboto', 'Source Sans Pro', sans-serif;
+	background: #FFFAEE url("../images/bg.png");
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
 	font-size: 18px;
 	color: #443A37;
 	position: relative;
 	display: none;
+	background-blend-mode: multiply;
+
+}
+
+.main-tutorial.even {
+	background: #FFF5DE url("../images/bg.png");
+
 }
 
 
-.main-tutorial.part0 {
-	color: #EFE6C4;
-	background: #D54839;
-}
-
-.main-tutorial.part0 h2 ,
-.main-tutorial.part0 h3 {
-	color: #EFE6C4;
-}
 
 /*
 .main-tutorial.part2 {
@@ -293,32 +319,33 @@ header .title {
 */
 .main-tutorial h2 {
 	/*font-family: "Roboto Slab";*/
-	font-size: 48px;
+	font-size: 30px;
 	text-transform: uppercase;
 	font-weight: 900;
-	color: #443A37;
+	color: #682615;
 	background: transparent;
-	padding: 80px 20px 40px;
+	padding: 80px 20px 0px;
+	text-align: center;
 }
 
 .main-tutorial h3 {
-	font-family:'Roboto Slab', serif;;
-	font-size: 36px;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+	font-size: 26px;
 	font-weight: 500;
-	color: #443A37;
+	color: #D13C15;
 	background: transparent;
-	padding: 60px 20px 30px;
+	max-width: 400px;
+	padding: 60px 20px 30px 70px;
+	position: relative;
 }
 
-.main-tutorial h4 {
-	font-family: 'Roboto', sans-serif;	font-size: 24px;
-	font-weight: 600;
-	padding: 40px 20px 20px;	
+h3 strong {
+	color: #6D3122
 }
+
 
 .main-tutorial h2 + h3 {
 	padding-top: 0;
-	margin-top: -50px
 }
 
 .main-tutorial h3 + h2 {
@@ -327,7 +354,173 @@ header .title {
 }
 
 .main-tutorial .row {
-	padding: 200px 0 60px;
+	padding: 80px 0;
+}
+
+.number {
+	display: inline-block;
+	background: #682615;
+	width: 56px;
+	height: 56px;
+	border-radius: 28px;
+	color: #FFFAEE;
+	text-align: center;
+	font-family: 'Wicked-Grit', Arial, sans-serif serif;
+	font-size: 40px;
+	padding-top: 5px;
+	margin-right: 10px;
+	position: absolute;
+	top: 60px;
+	left: 0;
+}
+
+.recipe {
+	background: #FFF url("../images/recipe-bg.png");
+	background-repeat: repeat-y;
+	background-position: 20px;
+	display: block;
+	float: left;
+	width: 500px;
+	padding: 20px 40px;
+	box-shadow: rgba(0,0,0,0.2) 0 1px 4px;
+}
+
+.recipe h4 {
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+	text-transform: uppercase;	
+	color: #D13C15;
+	font-weight: 600;
+	text-align: center;
+	font-size: 20px;
+}
+
+.recipe ul {
+	list-style-type: none;
+	font-weight: 600;
+	padding-left: 0;
+}
+
+.recipe li {
+	padding-left: 0;
+}
+
+.recipe ul ul {
+	padding-left: 30px;
+	font-weight: 400;
+}
+
+.recipe input[type='checkbox'] {
+	margin-right: 10px;
+}
+
+.main-tutorial figure {
+	float: right;
+	margin-top: 60px;	
+	position: relative;
+}
+
+.main-tutorial figure div {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.main-tutorial button {
+	width: 400px;
+	padding: 10px;
+	float: right;
+	clear: right;
+	margin-top: 60px;
+	background: #F15625;
+	color: #FFFAEE;
+	font-weight: 600;
+	border-radius: 3px;
+	border: none;
+	-webkit-appearance: none;
+}
+
+figure.geth {
+	width: 380px;
+	height: 280px;
+}
+
+figure.geth .geth-background {
+	background: url("../images/geth.png");
+	background-size: 380px 280px;
+}
+
+
+figure.geth .geth-logo {
+	background: url("../images/geth-foreground.png");
+	background-size: 380px 280px;
+}
+
+
+figure.greeter {
+	width: 317px;
+	height: 274px;
+}
+
+figure.greeter > div {
+	background-size: 317px 274px;
+}
+
+figure.greeter .greeter-human {
+	background-image: url("../images/greeter-human.png");
+}
+
+figure.greeter .greeter-robot {
+	background-image: url("../images/greeter-robot.png");
+}
+
+figure.greeter .greeter-question {
+	background-image: url("../images/greeter-question.png");
+}
+
+figure.greeter .greeter-answer {
+	background-image: url("../images/greeter-answer.png");
+}
+
+figure.coin {
+	width: 384px;
+	height: 382px;
+}
+
+figure.coin > div {
+	background-size: 384px 382px;
+}
+
+figure.coin .coin-background {
+	background-image: url("../images/token@2x.png");
+}
+
+
+figure.crowdsale {
+	width: 342px;
+	height: 326px;
+}
+
+figure.crowdsale > div {
+	background-size: 342px 326px;
+}
+
+figure.crowdsale .crowdsale-background {
+	background-image: url("../images/crowdsale@2x.png");
+}
+
+figure.dao {
+	width: 369px;
+	height: 376px;
+}
+
+figure.dao > div {
+	background-size: 369px 376px;
+}
+
+figure.dao .dao-background {
+	background-image: url("../images/dao@2x.png");
 }
 
 .start-menu {
@@ -450,9 +643,78 @@ pre, code {
 }
 
 footer {
-	background: url('../images/bg-footer.png') top center #161c30;
+	background: #E4D0B7 url("../images/bg-footer.png");
+	background-blend-mode: multiply;
 	background-size: 1920px auto;
 	font-size: 14px;
 	border-top: 3px solid #eb453e;
 	color: #F6E6CC;
+}
+
+.footer {
+	background: #1f0c05 url("../images/bg.png");
+	background-blend-mode: multiply;
+	padding-top: 100px;
+}
+
+.footer p {
+	color: #F6E6CC;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio:2){
+	img[src="images/ethereum-network.png"] {
+		background: url("../images/ethereum-network@2x.png");
+		background-size: 497px 345px;
+		width: 497px;
+		height: 345px;
+		padding-right: 497px;
+		overflow: hidden;
+	}
+	img[src="images/console.png"] {
+		background: url("../images/console@2x.png");
+		background-size: 589px 281px;
+		width: 589px;
+		height: 281px;
+		padding-right: 589px;
+		overflow: hidden;
+	}	
+
+	.main-tutorial {
+		background-image: url("../images/bg@2x.png");
+		background-size: 324px 326px !important;
+	}
+
+	.main-tutorial {
+		background: #FFFAEE url("../images/bg@2x.png");
+	}
+	
+	.recipe {
+		background-image: url("../images/recipe-bg@2x.png");
+		background-size: 8px 12px;
+	}
+
+	figure.geth .geth-background {
+		background-image: url("../images/geth@2x.png");
+	}
+
+
+	figure.geth .geth-logo {
+		background-image: url("../images/geth-foreground@2x.png");
+	}	
+
+	figure.greeter .greeter-human {
+		background-image: url("../images/greeter-human@2x.png");
+	}
+
+	figure.greeter .greeter-robot {
+		background-image: url("../images/greeter-robot@2x.png");
+	}
+
+	figure.greeter .greeter-question {
+		background-image: url("../images/greeter-question@2x.png");
+	}
+
+	figure.greeter .greeter-answer {
+		background-image: url("../images/greeter-answer@2x.png");
+	}
 }
