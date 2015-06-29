@@ -235,6 +235,7 @@ div.whatis {
 	color: #443A37;
 	position: relative;
 	display: none;
+	-webkit-background-blend-mode: multiply;
 	background-blend-mode: multiply;
 	min-width: 300px;
 }
@@ -629,6 +630,7 @@ pre, code {
 
 footer {
 	background: #E4D0B7 url("../images/bg-footer.png");
+	-webkit-background-blend-mode: multiply;
 	background-blend-mode: multiply;
 	background-size: 1920px auto;
 	font-size: 14px;
@@ -638,6 +640,7 @@ footer {
 
 .footer {
 	background: #1f0c05 url("../images/bg.png");
+	-webkit-background-blend-mode: multiply;
 	background-blend-mode: multiply;
 	padding-top: 100px;
 }
