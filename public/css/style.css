@@ -448,16 +448,16 @@ figure.coin {
 }
 
 figure.coin .coin-connection {
-	background-image: url("../images/token-connection@2x.png");
+	background-image: url("../images/token-connection.png");
 }
 figure.coin .coin-users {
-	background-image: url("../images/token-users@2x.png");
+	background-image: url("../images/token-users.png");
 }
 figure.coin .coin-coins {
-	background-image: url("../images/token-coins@2x.png");
+	background-image: url("../images/token-coins.png");
 }
 figure.coin .coin-send {
-	background-image: url("../images/token-send@2x.png");
+	background-image: url("../images/token-send.png");
 }
 
 
@@ -467,20 +467,20 @@ figure.crowdsale {
 }
 
 figure.crowdsale .crowdsale-logic {
-	background-image: url("../images/crowdsale-logic@2x.png");
+	background-image: url("../images/crowdsale-logic.png");
 }
 
 figure.crowdsale .crowdsale-robot {
-	background-image: url("../images/crowdsale-robot@2x.png");
+	background-image: url("../images/crowdsale-robot.png");
 }
 figure.crowdsale .crowdsale-money {
-	background-image: url("../images/crowdsale-money@2x.png");
+	background-image: url("../images/crowdsale-money.png");
 }
 figure.crowdsale .crowdsale-contributions {
-	background-image: url("../images/crowdsale-contributions@2x.png");
+	background-image: url("../images/crowdsale-contributions.png");
 }
 figure.crowdsale .crowdsale-crowd {
-	background-image: url("../images/crowdsale-crowd@2x.png");
+	background-image: url("../images/crowdsale-crowd.png");
 }
 
 figure.dao {
@@ -489,23 +489,23 @@ figure.dao {
 }
 
 figure.dao .dao-robot {
-	background-image: url("../images/dao-robot@2x.png");
+	background-image: url("../images/dao-robot.png");
 }
 
 figure.dao .dao-money {
-	background-image: url("../images/dao-money@2x.png");
+	background-image: url("../images/dao-money.png");
 }
 
 figure.dao .dao-arrows {
-	background-image: url("../images/dao-arrows@2x.png");
+	background-image: url("../images/dao-arrows.png");
 }
 
 figure.dao .dao-ideas {
-	background-image: url("../images/dao-ideas@2x.png");
+	background-image: url("../images/dao-ideas.png");
 }
 
 figure.dao .dao-crowd {
-	background-image: url("../images/dao-crowd@2x.png");
+	background-image: url("../images/dao-crowd.png");
 }
 
 .start-menu {
@@ -760,4 +760,58 @@ footer {
 	figure.greeter .greeter-answer {
 		background-image: url("../images/greeter-answer@2x.png");
 	}
+
+
+
+	figure.coin .coin-connection {
+		background-image: url("../images/token-connection@2x.png");
+	}
+	figure.coin .coin-users {
+		background-image: url("../images/token-users@2x.png");
+	}
+	figure.coin .coin-coins {
+		background-image: url("../images/token-coins@2x.png");
+	}
+	figure.coin .coin-send {
+		background-image: url("../images/token-send@2x.png");
+	}
+
+	figure.crowdsale .crowdsale-logic {
+		background-image: url("../images/crowdsale-logic@2x.png");
+	}
+
+	figure.crowdsale .crowdsale-robot {
+		background-image: url("../images/crowdsale-robot@2x.png");
+	}
+	figure.crowdsale .crowdsale-money {
+		background-image: url("../images/crowdsale-money@2x.png");
+	}
+	figure.crowdsale .crowdsale-contributions {
+		background-image: url("../images/crowdsale-contributions@2x.png");
+	}
+	figure.crowdsale .crowdsale-crowd {
+		background-image: url("../images/crowdsale-crowd@2x.png");
+	}
+
+	figure.dao .dao-robot {
+		background-image: url("../images/dao-robot@2x.png");
+	}
+
+	figure.dao .dao-money {
+		background-image: url("../images/dao-money@2x.png");
+	}
+
+	figure.dao .dao-arrows {
+		background-image: url("../images/dao-arrows@2x.png");
+	}
+
+	figure.dao .dao-ideas {
+		background-image: url("../images/dao-ideas@2x.png");
+	}
+
+	figure.dao .dao-crowd {
+		background-image: url("../images/dao-crowd@2x.png");
+	}
+
+
 }
