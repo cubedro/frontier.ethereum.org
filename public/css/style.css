@@ -485,42 +485,80 @@ figure.greeter .greeter-answer {
 
 figure.coin {
 	width: 384px;
-	height: 382px;
+	height: 342px;
 }
 
 figure.coin > div {
-	background-size: 384px 382px;
+	background-size: 384px 342px;
 }
 
-figure.coin .coin-background {
-	background-image: url("../images/token@2x.png");
+figure.coin .coin-connection {
+	background-image: url("../images/token-connection@2x.png");
+}
+figure.coin .coin-users {
+	background-image: url("../images/token-users@2x.png");
+}
+figure.coin .coin-coins {
+	background-image: url("../images/token-coins@2x.png");
+}
+figure.coin .coin-send {
+	background-image: url("../images/token-send@2x.png");
 }
 
 
 figure.crowdsale {
-	width: 342px;
-	height: 326px;
+	width: 407px;
+	height: 384px;
 }
 
 figure.crowdsale > div {
-	background-size: 342px 326px;
+	background-size: 407px 384px;
 }
 
-figure.crowdsale .crowdsale-background {
-	background-image: url("../images/crowdsale@2x.png");
+figure.crowdsale .crowdsale-logic {
+	background-image: url("../images/crowdsale-logic@2x.png");
+}
+
+figure.crowdsale .crowdsale-robot {
+	background-image: url("../images/crowdsale-robot@2x.png");
+}
+figure.crowdsale .crowdsale-money {
+	background-image: url("../images/crowdsale-money@2x.png");
+}
+figure.crowdsale .crowdsale-contributions {
+	background-image: url("../images/crowdsale-contributions@2x.png");
+}
+figure.crowdsale .crowdsale-crowd {
+	background-image: url("../images/crowdsale-crowd@2x.png");
 }
 
 figure.dao {
-	width: 369px;
-	height: 376px;
+	width: 420px;
+	height: 424px;
 }
 
 figure.dao > div {
-	background-size: 369px 376px;
+	background-size: 420px 424px;
 }
 
-figure.dao .dao-background {
-	background-image: url("../images/dao@2x.png");
+figure.dao .dao-robot {
+	background-image: url("../images/dao-robot@2x.png");
+}
+
+figure.dao .dao-money {
+	background-image: url("../images/dao-money@2x.png");
+}
+
+figure.dao .dao-arrows {
+	background-image: url("../images/dao-arrows@2x.png");
+}
+
+figure.dao .dao-ideas {
+	background-image: url("../images/dao-ideas@2x.png");
+}
+
+figure.dao .dao-crowd {
+	background-image: url("../images/dao-crowd@2x.png");
 }
 
 .start-menu {
@@ -670,8 +708,8 @@ footer {
 		padding-right: 497px;
 		overflow: hidden;
 	}
-	img[src="images/console.png"] {
-		background: url("../images/console@2x.png");
+	img[src="images/console.gif"] {
+		background: url("../images/console@2x.gif");
 		background-size: 589px 281px;
 		width: 589px;
 		height: 281px;
@@ -699,7 +737,7 @@ footer {
 
 
 	figure.geth .geth-logo {
-		background-image: url("../images/geth-foreground@2x.png");
+		background-image: url("../images/geth-foreground@2x.gif");
 	}	
 
 	figure.greeter .greeter-human {

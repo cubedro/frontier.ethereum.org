@@ -40,11 +40,14 @@ div.main-tutorial.even#install-geth
               |  Not being afraid of simple coding
             li 
               input(type="checkbox") 
-              |  One of the below:
+              |  Ether, which you can get if you have:
               ul
                 li 
                   input(type="checkbox") 
                   |  an active Github account, or..
+                li 
+                  input(type="checkbox") 
+                  |  Bitcoins, or...
                 li 
                   input(type="checkbox") 
                   |  computer with a good dedicated graphics card, or...
@@ -86,7 +89,7 @@ div.main-tutorial
                 |  Desire to learn new things  
               li 
                 input(type="checkbox") 
-                |  0.01 ether (approximatelly)
+                |  0.001 ether (approximatelly)
               li 
                 input(type="checkbox") 
                 |  1 "knock knock" joke (optional)
@@ -99,15 +102,18 @@ div.main-tutorial.even#crypto-currency
       div.col-md-12
 
         figure.coin.scrollme
-          div.coin-background.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatey="200")
+          div.coin-connection.animateme(data-when="enter", data-from="1", data-to="0.5", data-opacity="0", data-translatey="0")
+          div.coin-send.animateme(data-when="enter", data-from="0.9", data-to="0.8", data-opacity="0", data-translatey="-50", data-translatex="-200")
+          div.coin-users.animateme(data-when="enter", data-from="0.5", data-to="0.3", data-opacity="0", data-translatey="-100", data-scale="1.5", data-rotate="45")
+          div.coin-coins.animateme(data-when="enter", data-from="0.6", data-to="0.4", data-opacity="0", data-scale="0.5", data-translatey="-10")
 
         h3 
          div.number 3 
          | Design and issue your own cryptocurrency
 
-        p Create a tradeable token that can be used as a currency, a digital representation of an asset, a virtual share or anything you want. These tokens are compatible with the wallet and any ethereum-based exchange. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
+        p Create a tradeable digital token that can be used as a currency, a representation of an asset, a virtual share, proof of membership or anything you want. These tokens use a standard coin api, so it will be automatically compatible with any wallet, contract or exchange that also uses the same standard. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
 
-        button Issue your cryptocurrency 
+        button Issue your token 
 
         div.recipe
           h4 You'll need:
@@ -120,7 +126,7 @@ div.main-tutorial.even#crypto-currency
               |  Very basic programming skills 
             li 
               input(type="checkbox") 
-              |  0.02 ether (approximatelly)
+              |  0.002 ether (approximatelly)
             li 
               input(type="checkbox") 
               |  1 cool coin name (optional)
@@ -130,7 +136,11 @@ div.main-tutorial#crowdsale
     div.row
       div.col-md-12.tutorial
           figure.crowdsale.scrollme
-            div.crowdsale-background.animateme(data-when="enter", data-from="0.4", data-to="0.1", data-opacity="0", data-translatey="2200")
+            div.crowdsale-logic.animateme(data-when="enter", data-from="0.8", data-to="0.7", data-opacity="0", data-translatey="-100", data-easing="linear")
+            div.crowdsale-robot.animateme(data-when="enter", data-from="0.5", data-to="0.3", data-opacity="0", data-translatey="-155", data-translatex="-30", data-scale="1.1", data-rotatez="90", data-easing="linear")
+            div.crowdsale-money.animateme(data-when="enter", data-from="0.8", data-to="0.6", data-opacity="0",data-translatey="-20")
+            div.crowdsale-contributions.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0", data-scale="1.4")
+            div.crowdsale-crowd.animateme(data-when="enter", data-from="0.3", data-to="0.1", data-opacity="0", data-translatey="-100", data-scale="1.1", data-easing="linear")
 
           h3 
            div.number 4 
@@ -154,10 +164,12 @@ div.main-tutorial#crowdsale
                 | Basic programming skills 
               li 
                 input(type="checkbox") 
-                | 0.04 ether (approximatelly)
+                | 0.004 ether (approximatelly)
               li 
                 input(type="checkbox") 
-                a(href="#crypto-currency") any ethereum-based cryptocurrency 
+                | an ethereum-based  
+                a(href="#crypto-currency") digital token 
+                | (will be used to keep track of the rewards) 
               li 
                 input(type="checkbox") 
                 | 1 good idea that needs funding
@@ -169,7 +181,11 @@ div.main-tutorial.even
       div.col-md-12
 
         figure.dao.scrollme
-          div.dao-background.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatey="200")
+          div.dao-robot.animateme(data-when="enter", data-from="0.65", data-to="0.45", data-opacity="0", data-translatey="200", data-rotatez="-90")
+          div.dao-money.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0", data-translatey="200")
+          div.dao-arrows.animateme(data-when="enter", data-from="0.95", data-to="0.8", data-opacity="0", data-scale="1.5")
+          div.dao-crowd.animateme(data-when="enter", data-from="0.45", data-to="0.1", data-opacity="0", data-translatey="-250", data-translatex="10", data-rotatez="0", data-scale="1.1", data-easing="linear")
+          div.dao-ideas.animateme(data-when="enter", data-from="0.8", data-to="0.7", data-opacity="0", data-translatey="-40")
 
         h3 
          div.number 5 
@@ -192,12 +208,14 @@ div.main-tutorial.even
               | Basic programming skills 
             li 
               input(type="checkbox") 
-              | 0.08 ether to create the contract (plus however much you want to 
+              | 0.008 ether to create the contract (plus however much you want to 
               a(href="#crowdsale")  fund it with
               | )
-            li 
-              input(type="checkbox") 
-              a(href="#crypto-currency") any ethereum-based cryptocurrency 
+              li 
+                input(type="checkbox") 
+                | an ethereum-based
+                a(href="#crypto-currency") digital token 
+                | (will serve as a voting right) 
             li 
               input(type="checkbox") 
               | A bunch of ideas on where to spend your funds
