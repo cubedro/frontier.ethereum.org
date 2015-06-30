@@ -16,7 +16,8 @@
     "express": "^4.11.2",
     "jade": "^1.9.2",
     "lodash": "^3.3.1",
-    "serve-favicon": "^2.2.0"
+    "serve-favicon": "^2.2.0",
+    "markdown": "latest"
   },
   "repository": {
     "type": "git",
