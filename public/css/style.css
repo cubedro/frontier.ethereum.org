@@ -78,6 +78,7 @@ a:hover {
 .container {
 	max-width: 970px;
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+	font-weight: 500;
 }
 
 .btn {
@@ -293,7 +294,7 @@ div.whatis {
 .main-tutorial h3 {
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
 	font-size: 26px;
-	font-weight: 500;
+	font-weight: 600;
 	color: #D13C15;
 	background: transparent;
 	max-width: 400px;
