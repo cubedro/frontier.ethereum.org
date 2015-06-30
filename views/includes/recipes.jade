@@ -24,7 +24,7 @@ div.main-tutorial.even#install-geth
 
         p Geth is the main tool of the Frontier release. You can use it to test the network, send ether (the network’s internal currency),  execute contracts, unlock your pre-sale ether or make your computer into a supporting node to earn ether (ie. “mining”).
 
-        button install Geth 
+        a(href="geth").button install Geth 
 
         div.recipe
           h4 You'll need:
@@ -73,10 +73,10 @@ div.main-tutorial
            div.number 2 
            | Create the Greeter, your first live contract
 
-          p The greeter is a very simple contract that greets “Hello” when you poke it. It can also be updated into a Joke Telling contract.
+          p The greeter is a very simple contract that greets “Hello” when you poke it. It includes a very simple upgrade that turns it into a contract that will charge for telling jokes.
 
 
-          button Summon the Greeter 
+          a(href="greeter").button Summon the Greeter 
 
           div.recipe
             h4 You'll need:
@@ -113,7 +113,7 @@ div.main-tutorial.even#crypto-currency
 
         p Create a tradeable digital token that can be used as a currency, a representation of an asset, a virtual share, proof of membership or anything you want. These tokens use a standard coin api, so it will be automatically compatible with any wallet, contract or exchange that also uses the same standard. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
 
-        button Issue your token 
+        a(href="token").button Issue your token 
 
         div.recipe
           h4 You'll need:
@@ -151,7 +151,7 @@ div.main-tutorial#crowdsale
           p You can even use the token you just created to keep track of ownership of prizes.
 
 
-          button Kickstart your project 
+          a(href="crowdsale").button Kickstart your project 
 
           div.recipe
             h4 You'll need:
@@ -195,7 +195,7 @@ div.main-tutorial.even
 
         p One of the advantadges of having a robot run your organization is that it is immune to any outside influence and it’s guaranteed to execute only what it is programmed to do. Also your organization will never go offline or disappear and will always be available as long as the network exists.
 
-        button Start your organization 
+        a(href="dao").button Start your organization 
 
         div.recipe
           h4 You'll need:
@@ -208,14 +208,18 @@ div.main-tutorial.even
               | Basic programming skills 
             li 
               input(type="checkbox") 
-              | 0.008 ether to create the contract (plus however much you want to 
-              a(href="#crowdsale")  fund it with
-              | )
-              li 
+              | 0.008 ether to create the contract 
+                        
+            li 
                 input(type="checkbox") 
-                | an ethereum-based
-                a(href="#crypto-currency") digital token 
+                | an ethereum-based 
+                a(href="#crypto-currency") digital token  
                 | (will serve as a voting right) 
+
+            li 
+              input(type="checkbox") 
+              a(href="#crowdsale") Any amount of funds
+
             li 
               input(type="checkbox") 
               | A bunch of ideas on where to spend your funds

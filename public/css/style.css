@@ -1,5 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,300,300italic,700|Roboto+Mono:400,700);
-
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic);
 
 
 body {
@@ -268,15 +267,18 @@ div.whatis {
 	text-align: center;
 }
 
-/*
-.main-tutorial h2 {
-	font-family: "Wicked-Grit";
-	font-size: 48px;
-	color: #443A37;
-	background: transparent;
-	padding: 80px 20px 40px;
+
+.inner-tutorial h1 {
+	color: #D13C15;
+	text-align: center;
+	padding-top: 50px;
+	padding-bottom: 40px;
 }
-*/
+
+#tutorial-start h2 {
+	padding-bottom: 0;
+}
+
 .main-tutorial h2 {
 	/*font-family: "Roboto Slab";*/
 	font-size: 30px;
@@ -284,7 +286,7 @@ div.whatis {
 	font-weight: 900;
 	color: #682615;
 	background: transparent;
-	padding: 80px 20px 0px;
+	padding: 80px 20px 20px;
 	text-align: center;
 }
 
@@ -303,9 +305,17 @@ h3 strong {
 	color: #6D3122
 }
 
+.inner-tutorial h1 + h2 {
+	padding-top: 0;
+	margin-top: -40px;
+}
 
 .main-tutorial h2 + h3 {
 	padding-top: 0;
+}
+
+.main-tutorial h2 + h3 .number {
+	top: 0;
 }
 
 .main-tutorial h3 + h2 {
@@ -334,6 +344,7 @@ h3 strong {
 	left: 0;
 }
 
+/*.inner-tutorial ul,*/
 .recipe {
 	background: #FFF url("../images/recipe-bg.png");
 	background-repeat: repeat-y;
@@ -344,6 +355,14 @@ h3 strong {
 	padding: 20px 40px;
 	box-shadow: rgba(0,0,0,0.2) 0 1px 4px;
 }
+/*
+.inner-tutorial ul {
+	padding-left: 60px;
+}*/
+
+/*.inner-tutorial h4 {
+	text-align: center;
+}*/
 
 .recipe h4 {
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
@@ -373,6 +392,43 @@ h3 strong {
 	margin-right: 10px;
 }
 
+.inner-tutorial ul,
+.inner-tutorial .recipe {
+	float: none;
+	margin: 50px auto;
+	padding-top: 20px;
+	position: relative;
+}
+
+.inner-tutorial h4  {
+	color: #682615;
+}
+
+.inner-tutorial h5 {
+	color: rgba(255,255,255,0.6);
+	text-align: center;
+	font-size: 80%;
+	padding-top: 0;
+	background: #eb453e;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -10px;
+	padding: 5px;
+}
+
+.inner-tutorial h5 strong {
+	color: #FFF;
+}
+
+#tutorial-start {
+	display: none;
+}
+
+#tutorial-start:target {
+	display: block;
+}
+
 .main-tutorial figure {
 	float: right;
 	margin: 60px 0 30px 30px;	
@@ -391,8 +447,10 @@ h3 strong {
 	background-position: center;
 }
 
-.main-tutorial button {
+button,
+a.button {
 	display: block;
+	position: relative;
 	width: 400px;
 	padding: 10px;
 	float: right;
@@ -404,7 +462,55 @@ h3 strong {
 	font-weight: 600;
 	border-radius: 3px;
 	border: none;
+	text-align: center;
+	text-decoration: none;
+	font-weight: 600;
 	-webkit-appearance: none;
+}
+
+button:hover,
+a.button:hover {
+	border-bottom: solid 3px #AB3C19;
+	top: -3px;
+	text-shadow: rgba(0,0,0,0.2) 0 -1px 0;
+	box-shadow: rgba(0,0,0,0.1) 0 4px 1px;
+}
+
+.breadcrumb {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	color: #F6E6CC;
+	background: #1f0c05;  
+	padding: 10px 40px;
+	font-family: 'Wicked-Grit', Arial, sans-serif serif;
+	font-size: 14px;
+	z-index: 10;
+	background-image: url("../images/diamond-icon.png");
+	background-size: 19px 30px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+.warning a.button {
+	background-color: #FFFAEE;
+	color: #F15625;
+	margin: 30px auto;
+	float: none;
+}
+
+.cannot-continue ,
+.warning a.continue {
+	color: #FFFAEE;
+	text-align: center;
+	font-weight: 600;
+	display: block;
+	padding-top: 60px;
+}
+
+.cannot-continue {
+	color: #eb453e;
 }
 
 figure.geth {
@@ -543,86 +649,12 @@ figure.dao .dao-crowd {
 	white-space: pre;
 	font-size: 14px;
 	font-weight: 600;
-	padding: 30px 20px;
+	padding: 10px 20px 20px;
 	margin: 30px 0;
 	border: solid 4px #D6CDAB;
 	overflow: auto;
 }
 
-/*ul {
-	padding-left: 20px;
-}*/
-
-ul#toc {
-	position: fixed;
-	top: 10px;
-	right:10px;
-	width: 220px;
-	z-index: 10;
-	padding: 10px;
-	font-size: 16px;
-	font-weight: 600;
-	float: right;
-	opacity: 0;
-}
-
-ul#toc ul {
-	padding-left: 5px;
-}
-
-ul#toc li {
-	list-style-type: none;
-	overflow: hidden;
-	text-overflow:ellipsis;
-	white-space: nowrap;
-	border-top: dotted 1px #E9BEA1;
-	padding: 3px 0 4px 5px;
-}
-
-ul#toc li:first-child {
-	border-top: none;
-}
-
-ul#toc li a {
-	color: #D54839;
-}
-
-ul#toc > li {
-	text-transform: uppercase;
-}
-
-ul#toc > li > ul {
-	border-left: solid 3px #D54839;
-}
-
-ul#toc > li > ul > li  {
-	text-transform: none;
-	font-weight: 500;
-}
-
-ul#toc > li > ul > li > ul > li  {
-	text-transform: none;
-	font-weight: 300;
-	font-size: 15px;
-}
-
-ul#toc.light li a {
-	color: #EFE6C4;
-}
-
-ul#toc.light ul, 
-ul#toc.light li  {
-	border-color: #EFE6C4;
-}
-
-.terms-checkbox {
-	margin-right: 30px;
-	margin-top: 6px;
-}
-
-.terms-checkbox input {
-	margin-right: 10px;
-}
 
 pre, code {
 	background: #F6E6CC;
@@ -639,14 +671,48 @@ footer {
 }
 
 .footer {
-	background: #1f0c05 url("../images/bg.png");
-	-webkit-background-blend-mode: multiply;
-	background-blend-mode: multiply;
+	background: #1f0c05;
 	padding-top: 100px;
 }
 
 .footer p {
 	color: #F6E6CC;
+}
+
+.warning {
+	padding: 100px 0 150px;
+	background: #eb453e;
+	color: #F6E6CC;	
+	font-size: 150%;
+	font-weight: 500;
+}
+
+.warning h2 {
+	background-image: url('../images/warning@2x.png');
+	background-repeat: no-repeat;
+	background-size: 59px 59px;
+	background-position: left top;
+	padding-left: 80px;
+	padding-top: 5px;
+	font-size: 40px;
+}
+
+.warning figure.bad-robot {
+	background-image: url('../images/bad-robot@2x.png');
+	background-size: contain;
+	width: 113px;
+	height: 103px;
+	display: block;
+	margin: 100px auto;
+}
+
+.inner-tutorial figure {
+	float: none;
+	margin: 50px auto;
+} 
+
+.inner-tutorial h3 {
+	padding-left: 20px;
 }
 
 
@@ -683,7 +749,7 @@ footer {
 		margin: 0 auto;
 	}
 
-	.main-tutorial button ,
+	.main-tutorial a.button ,
 	.recipe {
 		width: 100%;
 	}
@@ -709,7 +775,7 @@ footer {
 
 	.row img, 
 	.recipe,
-	.main-tutorial button ,
+	.main-tutorial a.button ,
 	.main-tutorial figure {
 		float: none;
 		margin: 30px auto;
@@ -717,7 +783,7 @@ footer {
 }
 
 @media only screen and (max-width: 1000px ) {
-	.main-tutorial button {
+	.main-tutorial a.button {
 		float: none;
 	}
 }
@@ -756,6 +822,10 @@ footer {
 		padding-right: 589px;
 		overflow: hidden;
 	}	
+
+	.breadcrumb {
+		background-image: url("../images/diamond-icon@2x.png");
+	}
 
 	.main-tutorial {
 		background-image: url("../images/bg@2x.png");

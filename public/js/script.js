@@ -2,6 +2,19 @@ $(document).ready(function() {
   $('code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
+
+  if(!localStorage.getItem("agreedUpon")){
+      $('#agreement').click(function(){
+        $(".hidden").removeClass("hidden");
+        $('#agreement, .cannot-continue').hide();
+        localStorage.setItem("agreedUpon",true);
+      });    
+  } else {
+        $(".hidden").removeClass("hidden");
+        $('#agreement, .cannot-continue').hide();
+  }
+
+
 });
 
 

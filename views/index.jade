@@ -2,8 +2,8 @@ extends layout
 
 block content
   div.main-tutorial.scrollme.intro
-    div.scrollme.row.introduction.animateme(data-when="span", data-from="0", data-to="1", data-opacity="0.2", data-translatey="200")
-      div.animateme(data-when="span", data-from="0", data-to="1", data-translatey="150")
+    div.scrollme.row.introduction.animateme(data-when="span", data-from="0", data-to="1", data-opacity="0.2", data-translatey="300", data-easing="linear")
+      div.animateme(data-when="span", data-from="0", data-to="1", data-translatey="300", data-easing="linear")
         h1 Welcome to the frontier
 
   div.main-content
@@ -35,33 +35,3 @@ block content
 
 
 
-
-
-  div.footer
-    div.container
-
-      div.row
-        div.col-md-6
-          h2 Supported platforms
-          p We currently support Mac OS X and Linux. For more information about installing and building go-ethereum on other platforms please visit our #[a(target="_blank", href="https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum(Go)") wiki page].
-
-        div.col-md-6
-          h2 Troubleshooting
-          p If something went wrong first read our Troubleshooting checklist. If you still didn't find your answer please #[a(href="") open an issue on GitHub] or contact our #[a(href="#") help desk].
-
-      div.clearfix
-        br
-        br
-
-      div.row
-        div.col-md-6
-          h2 Security
-          p Please report security issues to #[a(href="mailto:security@ethereum.org") security@ethereum.org].
-
-        div.col-md-6
-          h2 License
-          p Ethereum Core Protocol licensed under the #[a(target="_blank", href="https://github.com/ethereum/go-ethereum/blob/develop/LICENSE") GNU Lesser General Public License]. Ethereum client licensed under the GPL.
-
-      div.clearfix
-        br
-        br
