@@ -38,9 +38,39 @@ div.main-tutorial.even#install-geth
             li 
               input(type="checkbox") 
               |  Not being afraid of simple coding
+            
+
+div.main-tutorial
+  div.container   
+    div.row
+      div.col-md-12
+
+        figure.geth-ether.geth.scrollme
+          div.get-ether-brick-0.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65", data-translatex="200", data-translatey="400", data-rotatez="-30", data-easing="easein")
+          div.get-ether-brick-1.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65", data-translatex="-200", data-translatey="400", data-rotatez="30", data-easing="easein")
+          div.get-ether-coin.animateme(data-when="enter", data-from="0", data-to="1", data-translatey="-100", data-rotatez="45", data-rotatex="30", data-rotatey="45")
+          div.get-ether-brick-2.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65" data-translatex="-400", data-translatez="-200", data-rotatez="-45", data-easing="easein")
+          div.get-ether-brick-3.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65", data-translatex="400", data-translatey="200", data-rotatez="45", data-easing="easein")
+          div.get-ether-brick-4.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65", data-translatex="200", data-translatey="-400", data-rotatez="30", data-easing="easein")
+          div.get-ether-brick-5.animateme(data-when="span", data-opacity="0", data-from="0.5", data-to="0.65", data-translatex="-200", data-translatey="-400", data-rotatez="-30", data-easing="easein")
+
+        h3 
+         div.number 2 
+         | Get Ether, the crypto-fuel of the ethereum network
+
+        p Ether is the internal currency of the system. All programs running on ethereum need to pay for their time in ether, and anyone can setup a computer executing those computations to earn ether. If you donated to fund Ethereum development or if you participated on our bug bounty program, you should have a file with a claim for ether. Otherwise you can get some from a friend, by exchanging it with bitcoin or in one of the sites that give away free ether.
+
+        a(href="ether").button get Ether 
+
+        div.recipe
+          h4 You'll need:
+          ul
             li 
               input(type="checkbox") 
-              |  Ether, which you can get if you have:
+              a(href="#install-geth") Geth 
+            li 
+              input(type="checkbox") 
+              |  One of these:
               ul
                 li 
                   input(type="checkbox") 
@@ -59,7 +89,7 @@ div.main-tutorial.even#install-geth
                   input(type="checkbox") 
                   |  a friend that can give you ether 
 
-div.main-tutorial
+div.main-tutorial.even
   div.container   
     div.row
       div.col-md-12.tutorial
@@ -70,7 +100,7 @@ div.main-tutorial
             div.greeter-answer.animateme(data-when="enter", data-from="0.9", data-to="0.6", data-opacity="0")
 
           h3 
-           div.number 2 
+           div.number 3 
            | Create the Greeter, your first live contract
 
           p The greeter is a very simple contract that greets “Hello” when you poke it. It includes a very simple upgrade that turns it into a contract that will charge for telling jokes.
@@ -96,7 +126,7 @@ div.main-tutorial
 
 
 
-div.main-tutorial.even#crypto-currency
+div.main-tutorial#crypto-currency
   div.container   
     div.row
       div.col-md-12
@@ -108,7 +138,7 @@ div.main-tutorial.even#crypto-currency
           div.coin-coins.animateme(data-when="enter", data-from="0.6", data-to="0.4", data-opacity="0", data-scale="0.5", data-translatey="-10")
 
         h3 
-         div.number 3 
+         div.number 4 
          | Design and issue your own cryptocurrency
 
         p Create a tradeable digital token that can be used as a currency, a representation of an asset, a virtual share, proof of membership or anything you want. These tokens use a standard coin api, so it will be automatically compatible with any wallet, contract or exchange that also uses the same standard. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
@@ -131,7 +161,7 @@ div.main-tutorial.even#crypto-currency
               input(type="checkbox") 
               |  1 cool coin name (optional)
 
-div.main-tutorial#crowdsale
+div.main-tutorial.even#crowdsale
   div.container   
     div.row
       div.col-md-12.tutorial
@@ -143,7 +173,7 @@ div.main-tutorial#crowdsale
             div.crowdsale-crowd.animateme(data-when="enter", data-from="0.3", data-to="0", data-opacity="0", data-translatey="-100", data-scale="1.1", data-easing="linear")
 
           h3 
-           div.number 4 
+           div.number 5 
            | Kickstart a project with a trustless crowdsale
 
           p Are you already full of ideas to develop things in ethereum? Maybe now you need some help and some funds to do that, but who would give money to someone they don’t trust? Using Ethereum you can create a contract that will hold contributors money until either a specific date is reached or until a given amount is reached. All without requiring a central service provider, a clearing house or having to trust anyone. 
@@ -175,7 +205,7 @@ div.main-tutorial#crowdsale
                 | 1 good idea that needs funding
 
 
-div.main-tutorial.even
+div.main-tutorial
   div.container   
     div.row
       div.col-md-12
@@ -188,10 +218,10 @@ div.main-tutorial.even
           div.dao-ideas.animateme(data-when="enter", data-from="0.8", data-to="0.7", data-opacity="0", data-translatey="-40")
 
         h3 
-         div.number 5 
+         div.number 6 
          | Create a democratic autonomous organization
 
-        p Now you have an idea, the funds and a lot of backers, what’s next? You have to now to hire managers, find a trustable CFO to handle the funds, do board meetings, do a bunch of paperwork. Or you can simply leave that to an ethereum contract. It will accept proposals by any of your contributors and then put it them all to a transparent vote.
+        p Now you have an idea, the funds and a lot of backers, what’s next? You now have to hire managers, find a trustable CFO to handle the funds, do board meetings and a bunch of paperwork. Or you can simply leave that to an ethereum contract. It will accept proposals by any of your contributors and then put them all to a transparent vote.
 
         p One of the advantadges of having a robot run your organization is that it is immune to any outside influence and it’s guaranteed to execute only what it is programmed to do. Also your organization will never go offline or disappear and will always be available as long as the network exists.
 
@@ -227,4 +257,35 @@ div.main-tutorial.even
               input(type="checkbox") 
               | Friends to vote on these ideas (optional)
 
+
+div.main-tutorial.even
+  div.container   
+    div.row
+      div.col-md-12
+
+        figure.moon.scrollme
+          div.moon-stars.animateme(data-when="span", data-from="0", data-to="1", data-translatey="100", data-rotatez="360", data-easing="linear")
+          div.moon-moon.animateme(data-when="span", data-from="0", data-to="1", data-translatey="100", data-rotatez="720", data-easing="linear")
+          div.moon-rocket.animateme(data-when="span", data-from="0", data-to="1", data-translatey="-50", data-easing="linear")
+          
+        h3 
+         div.number 7 
+         | Build a new kind of decentralized application
+
+        p Now it's your turn: start building what you want to create in ethereum! Could your business be enhanced by existing in a cryptographically secure, decentralized, tamper proof network?
+
+        p There are many great projects being built right now, you should check them. And since you are among the very few people in the world that can program a decentralized app, maybe some of them might need your help!
+
+        div.recipe
+          h4 Built using Ethereum:
+          ul
+            li 
+              a(href="#") Augur: 
+              | Can ethereum predict the future?
+            li 
+              a(href="#") Etherex: 
+              | a decentralized exchange
+            li 
+              a(href="#") e-dollar: 
+              | a self stabilizing coin in ethereum
 

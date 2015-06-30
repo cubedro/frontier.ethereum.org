@@ -301,6 +301,12 @@ div.whatis {
 	position: relative;
 }
 
+.tutorial-end h3 {
+	padding: 30px 20px;
+	max-width: none;
+	text-align: center;
+}
+
 h3 strong {
 	color: #6D3122
 }
@@ -513,6 +519,28 @@ a.button:hover {
 	color: #eb453e;
 }
 
+figure.ethereum-network {
+	display: block;
+	width: 100%;
+	max-width: 488px;
+	height: 336px;
+	background-image: url("../images/ethereum-network.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+
+figure.geth-console {
+	display: block;
+	width: 100%;
+	max-width: 589px;
+	height: 281px;
+	background-image: url("../images/console.gif");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+
 figure.geth {
 	max-width: 380px;
 	height: 280px;
@@ -522,10 +550,44 @@ figure.geth .geth-background {
 	background-image: url("../images/geth.png");
 }
 
-
 figure.geth .geth-logo {
 	background-image: url("../images/geth-foreground.png");
 }
+
+figure.get-ether {
+	max-width: 194px;
+	height: 195px;
+}
+
+figure.geth-ether .get-ether-brick-0 {
+	background-image: url("../images/get-ether-brick-0.png");
+}
+
+figure.geth-ether .get-ether-brick-1 {
+	background-image: url("../images/get-ether-brick-1.png");
+}
+
+figure.geth-ether .get-ether-brick-2 {
+	background-image: url("../images/get-ether-brick-2.png");
+}
+
+figure.geth-ether .get-ether-brick-3 {
+	background-image: url("../images/get-ether-brick-3.png");
+}
+
+figure.geth-ether .get-ether-brick-4 {
+	background-image: url("../images/get-ether-brick-4.png");
+}
+
+figure.geth-ether .get-ether-brick-5 {
+	background-image: url("../images/get-ether-brick-5.png");
+}
+
+figure.geth-ether .get-ether-coin {
+	background-image: url("../images/get-ether-coin.png");
+}
+
+
 
 
 figure.greeter {
@@ -614,6 +676,25 @@ figure.dao .dao-ideas {
 figure.dao .dao-crowd {
 	background-image: url("../images/dao-crowd.png");
 }
+
+
+figure.moon {
+	max-width: 420px;
+	height: 424px;
+}
+
+figure.moon .moon-stars {
+	background-image: url("../images/moon-stars.png");
+}
+
+figure.moon .moon-moon {
+	background-image: url("../images/moon-moon.png");
+}
+
+figure.moon .moon-rocket {
+	background-image: url("../images/moon-rocket.png");
+}
+
 
 .start-menu {
 	-webkit-perspective: 2000;
@@ -744,7 +825,8 @@ footer {
 		text-align: left;
 	}
 
-	.main-tutorial figure {
+
+	figure {
 		height: 300px;
 		margin: 0 auto;
 	}
@@ -754,13 +836,12 @@ footer {
 		width: 100%;
 	}
 
-	img[src="images/ethereum-network.png"] {
+	/*figure.ethereum-network{
 		height: 150px !important;
 	}
-	img[src="images/console.gif"] {
-		max-width: 589px;
+	img.geth-console{
 		height: 150px !important;
-	}	
+	}*/	
 
 }
 
@@ -841,6 +922,18 @@ footer {
 		background-size: 8px 12px;
 	}
 
+
+
+	figure.ethereum-network {
+		background-image: url("../images/ethereum-network@2x.png");
+	}
+
+
+	figure.geth-console {
+		background-image: url("../images/console@2x.gif");
+	}
+
+
 	figure.geth .geth-background {
 		background-image: url("../images/geth@2x.png");
 	}
@@ -849,6 +942,35 @@ footer {
 	figure.geth .geth-logo {
 		background-image: url("../images/geth-foreground@2x.gif");
 	}	
+
+
+	figure.geth-ether .get-ether-brick-0 {
+		background-image: url("../images/get-ether-brick-0@2x.png");
+	}
+
+	figure.geth-ether .get-ether-brick-1 {
+		background-image: url("../images/get-ether-brick-1@2x.png");
+	}
+
+	figure.geth-ether .get-ether-brick-2 {
+		background-image: url("../images/get-ether-brick-2@2x.png");
+	}
+
+	figure.geth-ether .get-ether-brick-3 {
+		background-image: url("../images/get-ether-brick-3@2x.png");
+	}
+
+	figure.geth-ether .get-ether-brick-4 {
+		background-image: url("../images/get-ether-brick-4@2x.png");
+	}
+
+	figure.geth-ether .get-ether-brick-5 {
+		background-image: url("../images/get-ether-brick-5@2x.png");
+	}
+
+	figure.geth-ether .get-ether-coin {
+		background-image: url("../images/get-ether-coin@2x.png");
+	}
 
 	figure.greeter .greeter-human {
 		background-image: url("../images/greeter-human@2x.png");
@@ -917,6 +1039,17 @@ footer {
 	figure.dao .dao-crowd {
 		background-image: url("../images/dao-crowd@2x.png");
 	}
+	
+	figure.moon .moon-stars {
+		background-image: url("../images/moon-stars@2x.png");
+	}
 
+	figure.moon .moon-moon {
+		background-image: url("../images/moon-moon@2x.png");
+	}
+
+	figure.moon .moon-rocket {
+		background-image: url("../images/moon-rocket@2x.png");
+	}
 
 }

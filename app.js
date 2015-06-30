@@ -25,6 +25,10 @@ app.get('/geth', function(req, res) {
 	res.render('geth', { title: 'Ethereum Frontier', block: approvedBlock });
 });
 
+app.get('/ether', function(req, res) {
+	res.render('ether', { title: 'Ethereum Frontier', block: approvedBlock });
+});
+
 app.get('/greeter', function(req, res) {
 	res.render('greeter', { title: 'Ethereum Frontier', block: approvedBlock });
 });
