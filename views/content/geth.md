@@ -11,12 +11,10 @@ The Frontier tool is called Geth (the old english third person singular conjugat
 
 
  
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/cubedro/frontier.ethereum.org/master/bin/install.rb)"
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/ethereum/frontier.ethereum.org/master/bin/install.rb)"
  
 
 Or, alternatively
-
-
  
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/cubedro/frontier.ethereum.org/master/bin/install.rb)"
  
