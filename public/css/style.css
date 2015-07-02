@@ -1056,7 +1056,7 @@ footer {
 
 
 .ethereum-projects li {
-	display: block;
+	display: inline-block;
 	max-width: 200px;
 	padding: 20px;
 	text-align: center;
