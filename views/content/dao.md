@@ -2,145 +2,229 @@
 
 # Democracy DAO
 
-A decentralized autonomous organization: the Democracy Contract
 
-So you raised money for your new country, but so far it’s an Oligarchy, where all the money is controlled by the few people that have the key for your multisignature wallet. This doesn’t sound like a great start for a new society, does it? So let’s create a democratic organization.
 
-```js
-contract multisig {   
-  function multisig() { 
-    // when a contract has a function with the same name as itself, 
-    // then that function is run at startup
-    m_numOwners = 1; 
-    m_required = m_numOwners; 
-    m_owners[msg.sender] = m_numOwners; 
-  }
-    
-  function transact(address _to, uint _value) external onlyowner {
-    // Each transaction is converted in a hash and awaits confirmation
-        if (confirm(m_owners[msg.sender], sha3(_to, _value)))
-            _to.send(_value);
-    }
-  
-  function addOwner(address _newOwner) external onlyowner {
-    // Any owner can invite more, and all transactions need to be approved by more than half of them
-    if (!(isOwner(_newOwner))) {
-      m_numOwners++;
-      m_required = m_numOwners / 2 + 1;
-      m_owners[_newOwner] = m_numOwners;  
-    }
-  }
-  
-    function confirm(uint _owner, bytes32 _hash) internal returns (bool) {
-    // Does some bitshifting magic to confirm transactions
-        uint ownerBit = 2**_owner;
-        if (m_pending[_hash].confirmed & ownerBit == 0) {
-            m_pending[_hash].confirmed &= ownerBit;
-            if (++m_pending[_hash].numConfirmations >= m_required) { 
-                delete m_pending[_hash];
-                return true;
+So far you created a tradeable token and you successfully distributed it among all those who were willing to help fundraise a 100 ethers. That's all very interesting but what exactly are those tokens for?  Why would anyone want to own or trade it for anything else valuable? If you can convince your new token is the next big money maybe others will want it, but so far your token offers no value per se. We are going to change that, by creating your first decentralized autonomous organization, or DAO.
+
+Think of the DAO as the constitution of your country, the executive branch of it's government or maybe like a completely robotic middle manager for an organization. The DAO receives the money that your organization raises via any means, keeps it safe and uses it to fund whatever it's citizens want. The robot is incorruptible, it will never defraud the bank, never create secret plans, never use the money for anything other than what it's constituents voted on. The DAO will never disappear, never run away and cannot be controlled by anyone other than it's own citizens.
+
+The token we created using the crowdsale is the only citizen document needed. Anyone who holds any token is able to create and vote on proposals. Similar to being a shareholder in a company, the token can be traded on the open market and the vote is proportional to amounts of tokens the voter holds.  
+
+Take a moment to dream about the revolutionary possibilities this would allow, and now you can do it yourself, in under a 100 lines of code:
+
+
+### The Code
+
+    contract token { mapping (address => uint) public balances;   function token() { }   function sendToken(address receiver, uint amount) returns(bool sufficient) {  } }
+
+    contract Democracy {
+      
+      uint public minimumQuorum = 10;
+      uint public debatingPeriod = 7 days;
+      token voterShare;
+      uint public numProposals = 0;
+      address public founder;
+      
+      mapping (uint => Proposal) public proposals;
+        
+      struct Proposal {
+        address recipient;
+        uint amount;
+        bytes32 data;
+        bytes32 descriptionHash;
+        uint creationDate;
+        uint numVotes;
+        uint quorum;
+        bool active;
+        mapping (uint => Vote) votes;
+        mapping (address => bool) voted;
+      }
+      
+      struct Vote {
+        int position;
+        address voter;
+      }
+      
+      function Democracy() {
+        founder = msg.sender; 
+      }
+      
+      function setup(address _voterShareAddress){
+        if (msg.sender == founder && numProposals == 0) {
+          voterShare = token(_voterShareAddress);
+        }   
+      }
+      
+      function newProposal(address _recipient, uint _amount, bytes32 _data, bytes32 _descriptionHash) returns (uint proposalID) {
+        if (voterShare.balances(msg.sender)>0) {
+          proposalID = numProposals++;
+          Proposal p = proposals[proposalID];
+          p.recipient = _recipient;
+          p.amount = _amount;
+          p.data = _data;
+          p.descriptionHash = _descriptionHash;
+          p.creationDate = now;
+          p.numVotes = 0; 
+          p.active = true;
+        } else {
+          return 0;
+        }
+      }
+      
+      function vote(uint _proposalID, int _position) returns (uint voteID){
+        if (voterShare.balances(msg.sender)>0 && (_position >= -1 || _position <= 1 )) {
+          Proposal p = proposals[_proposalID];
+          if (!p.voted[msg.sender]) {
+            voteID = p.numVotes++;
+            Vote v = p.votes[voteID];
+            v.position = _position;
+            v.voter = msg.sender; 
+            p.voted[msg.sender] = true;
+          }
+        } else {
+          return 0;
+        }
+      }
+      
+      function executeProposal(uint _proposalID) returns (uint result) {
+        Proposal p = proposals[_proposalID];
+        /* Check if debating period is over */
+        if (now > p.creationDate + debatingPeriod && p.active){   
+          uint yea = 0;
+          uint nay = 0;
+          /* tally the votes */
+          for (uint i = 0; i <=  p.numVotes; i++) {
+            Vote v = p.votes[i];
+            uint voteWeight = voterShare.balances(v.voter); 
+            p.quorum += voteWeight;
+
+            if (v.position > 0) {
+              yea += voteWeight;
+            } if (v.position < 0) {
+              nay += voteWeight;
             }
-        } 
+          }
+          /* execute result */
+          if (p.quorum > minimumQuorum && yea > nay ) {
+            p.recipient.call.value(p.amount)(p.data);
+            p.active = false;
+          } else if (p.quorum > minimumQuorum && nay > yea) {
+            p.active = false;
+          }
+          return yea - nay;
+        }
+      }
     }
-  // What follows are variables that are used to describe the function
-    modifier onlyowner() { if (isOwner(msg.sender)) _ }
-  
-  // Accessors to allow reading function variables
-    function isOwner(address addr) returns (bool) { return m_owners[addr] > 0; }
-    function totalOwners() returns (uint) { return m_numOwners; }
-    function totalRequiredConfirmations() returns (uint) { return m_required; }
-  function pendingConfirmations(address _to, uint _value) returns (uint) { return m_pending[sha3(_to, _value)].numConfirmations; }
-  
-  // Declaring the contract structure
-    uint m_numOwners;
-    uint m_required;
-    mapping(address => uint) m_owners;
-    mapping(bytes32 => Pending) m_pending;
-    struct Pending {
-        uint confirmed;
-        uint numConfirmations;
+
+There's a lot of going on but if you have ever read any kind of code this one should be easily understandable. The rules of your country are very simple: anyone with at least one token can create proposals to send funds from the country's account. After a week of debate and votes, if it has received votes totally at least 100 tokens and has more approvals than rejections, the funds will be sent. If the quorum hasn't been met or it ends on a tie, then voting is kept until it's resolved. Otherwise, the proposal is locked and kept for historical purposes.
+
+So let's recap what this means: in the last two sections you created 10,000 tokens, sent 1,000 of those to another account you control, 2,000 to a friend named Alice and distributed 5,000 of them via a crowdsale.  This means that you no longer control over 50% of the votes in the DAO, and if Alice and the community bands together, they can outvote any spending decision on the 100 ethers raised so far. This is exactly how a democracy should work. If you don't want to be a part of your country anymore the only thing you can do is sell your own tokens on a decentralized exchange and opt out, but you cannot prevent the others from doing so.
+
+### Set Up
+
+So open your console and let's get ready to finally put your country online:
+
+      var daoSource = 'contract token { mapping (address => uint) public balances; function token() { } function sendToken(address receiver, uint amount) returns(bool sufficient) { } } contract Democracy { uint public minimumQuorum = 10; uint public debatingPeriod = 7 days; token voterShare; uint public numProposals = 0; address public founder; mapping (uint => Proposal) public proposals; struct Proposal { address recipient; uint amount; bytes32 data; bytes32 descriptionHash; uint creationDate; uint numVotes; uint quorum; bool active; mapping (uint => Vote) votes; mapping (address => bool) voted; } struct Vote { int position; address voter; } function Democracy() { founder = msg.sender; } function setup(address _voterShareAddress){ if (msg.sender == founder && numProposals == 0) { voterShare = token(_voterShareAddress); } } function newProposal(address _recipient, uint _amount, bytes32 _data, bytes32 _descriptionHash) returns (uint proposalID) { if (voterShare.balances(msg.sender)>0) { proposalID = numProposals++; Proposal p = proposals[proposalID]; p.recipient = _recipient; p.amount = _amount; p.data = _data; p.descriptionHash = _descriptionHash; p.creationDate = now; p.numVotes = 0; p.active = true; } else { return 0; } } function vote(uint _proposalID, int _position) returns (uint voteID){ if (voterShare.balances(msg.sender)>0 && (_position >= -1 || _position <= 1 )) { Proposal p = proposals[_proposalID]; if (!p.voted[msg.sender]) { voteID = p.numVotes++; Vote v = p.votes[voteID]; v.position = _position; v.voter = msg.sender; p.voted[msg.sender] = true; } } else { return 0; } } function executeProposal(uint _proposalID) returns (uint result) { Proposal p = proposals[_proposalID]; /* Check if debating period is over */ if (now > p.creationDate + debatingPeriod && p.active){ uint yea = 0; uint nay = 0; /* tally the votes */ for (uint i = 0; i <= p.numVotes; i++) { Vote v = p.votes[i]; uint voteWeight = voterShare.balances(v.voter); p.quorum += voteWeight; if (v.position > 0) { yea += voteWeight; } if (v.position < 0) { nay += voteWeight; } } /* execute result */ if (p.quorum > minimumQuorum && yea > nay ) { p.recipient.call.value(p.amount)(p.data); p.active = false; } else if (p.quorum > minimumQuorum && nay > yea) { p.active = false; } return yea - nay; } } }'
+
+      var daoCompiled = eth.compile.solidity(daoSource);
+      var daoAddress = eth.sendTransaction({data: daoCompiled.Democracy.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")});
+
+Wait a minute until the miners pick it up. It will cost you about 0.6 ethers in current market price. Once it's picked up it's time to instantiate it and set it up, by pointing it to the correct address of the token contract you created previously. Let's also register a name for your contract so it's easily accessible (don't forget to check your name availability with registrar.addr("nameYouWant") before reserving!)
+
+    var name = "MyPersonalCountry"
+    registrar.reserve.sendTransaction(name, {from: eth.accounts[0]})
+    var daoInstance = eth.contract(daoCompiled.Democracy.info.abiDefinition).at(daoAddress);
+    daoInstance.setup.sendTransaction(registrar.addr("MyFirstCoin"),{from:eth.accounts[0]})
+
+Wait for the previous transactions to be picked up and then:
+
+    registrar.setAddress.sendTransaction(name, daoAddress, true,{from: eth.accounts[0]});
+
+Test the parameters by doing these commands:
+
+    daoInstance.numProposals.call();
+    daoInstance.proposals.call();
+    daoInstance.founder.call()
+
+If everything is setup then your DAO should return a proposal count of 0 and an address marked as the "founder". While there are still no proposals, the founder of the DAO can change the address of the token to anything it wants. 
+
+### Interacting with the DAO
+
+After you are satisfied with what you want, it's time to get all that ether you got from the crowdfunding and into your new country:
+
+    eth.sendTransaction({from: eth.accounts[1], to: daoAddress, value: web3.toWei(100, "ether")})
+
+This should take only a minute and your country is ready for business! Now, as a first priority, your country needs a nice flag, but unless you are a flag expert, you have no idea how to do that. For the sake of argument let's say you find that your friend Bob is a great flag designer who's willing to do it for only 10 ethers, so you want to propose to hire him to design a flag. 
+
+    recipient = registrar.addr("bob");
+    amount =  web3.toWei(10, "ether");
+    shortNote = "Flag Design";
+    daoInstance.newProposal.sendTransaction( recipient, amount, shortNote, '', {from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")})
+
+After a minute, anyone can check the proposal recipient and amount by executing these commands:
+
+    daoInstance.numProposals.call()
+
+Unlike most governments, your country's government is completely transparent and easily programmable. As a small demonstration here's a snippet of code that goes through all the current proposals and prints what they are and for whom:
+
+    function checkAllProposals() {  
+      for (i = 0; i< daoInstance.numProposals.call(); i++ ) { 
+    var p = daoInstance.proposals.call(i)
+    console.log("Proposal #" + i + "  Send " + web3.fromWei( p[1], "ether") + " ether to address " + p[0] + " for " + p[2]); 
     }
-}
-```
+    }
+    checkAllProposals();
+
+A concerned citizen could easily write a bot that periodically pings the blockchain and then publicizes any new proposals that were put forth, guaranteeing total transparency.
+
+Now of course you want other people to be able to vote on your proposals. You can check the crowdsale tutorial on the best way to register your contract app so that all the user needs is a name, but for now let's use the easier version. Anyone should be able to instantiate a local copy of your country in their computer by using this giant command: 
 
 
-There’s a lot going on in this contract right now, but if you have any experience with programming languages you will probably be able to get a grasp on it. The basics is that this is a collective account with multiple account owners. Any owner can invite more people to be owners, and any owner can request money to be sent to some other account. But in order for the transaction to go through, it has to be agreed by at least 50%+1 of the account holders.
+    daoInstance = eth.contract([{outputs:[{name:'recipient',type:'address'},{name:'amount',type:'uint256'},{name:'data',type:'bytes32'},{name:'descriptionHash',type:'bytes32'},{name:'creationDate',type:'uint256'},{name:'numVotes',type:'uint256'},{name:'quorum',type:'uint256'},{name:'active',type:'bool'}],type:'function',constant:true,inputs:[{name:'',type:'uint256'}],name:'proposals'},{constant:false,inputs:[{type:'uint256',name:'_proposalID'}],name:'executeProposal',outputs:[{name:'result',type:'uint256'}],type:'function'},{constant:true,inputs:[],name:'debatingPeriod',outputs:[{name:'',type:'uint256'}],type:'function'},{constant:true,inputs:[],name:'numProposals',outputs:[{name:'',type:'uint256'}],type:'function'},{name:'founder',outputs:[{name:'',type:'address'}],type:'function',constant:true,inputs:[]},{constant:false,inputs:[{type:'uint256',name:'_proposalID'},{name:'_position',type:'int256'}],name:'vote',outputs:[{name:'voteID',type:'uint256'}],type:'function'},{outputs:[],type:'function',constant:false,inputs:[{name:'_voterShareAddress',type:'address'}],name:'setup'},{type:'function',constant:false,inputs:[{type:'address',name:'_recipient'},{name:'_amount',type:'uint256'},{name:'_data',type:'bytes32'},{name:'_descriptionHash',type:'bytes32'}],name:'newProposal',outputs:[{name:'proposalID',type:'uint256'}]},{type:'function',constant:true,inputs:[],name:'minimumQuorum',outputs:[{name:'',type:'uint256'}]},{inputs:[],type:'constructor'}]},{type:'constructor',inputs:[]}]).at(registrar.addr('MyPersonalCountry'))
 
-Now take that contract and compile it via the online tool provided.
+Then anyone who owns any of your tokens can vote on the proposals by doing this:
 
-The most important is the compiled hex code and the contract interface. Replace the code below by what the compiler has provided you.
+    var proposalID = 0;
+    var position = 1; // +1 for voting yea, -1 for voting nay, 0 abstains but counts as quorum
+    daoInstance.vote.sendTransaction(proposalID, position, {from: eth.accounts[0]});
 
-```js
-var compiledCode = "0x5b6001600060005081905550600060005054600160005081905550600060005054600260005060003373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055505b6103db806100636000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063243669ad146100665780632f54bf6e14610078578063510f43f61461008d5780637065cb481461009f578063a7cf6e22146100b0578063f77ac668146100c857005b61006e61026d565b8060005260206000f35b61008360043561022c565b8060005260206000f35b61009561027f565b8060005260206000f35b6100aa60043561019f565b60006000f35b6100be600435602435610291565b8060005260206000f35b6100d66004356024356100dc565b60006000f35b6100e53361022c565b6100ee5761019a565b610160600260005060003373ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000505460408473ffffffffffffffffffffffffffffffffffffffff166c01000000000000000000000000028152601401838152602001604090036040206102f9565b61016957610199565b8173ffffffffffffffffffffffffffffffffffffffff166000826000600060006000848787f161019557005b5050505b5b5b5050565b6101a83361022c565b6101b157610228565b6101ba8161022c565b156101c457610227565b6000600081815054809291906001019190505550600160026000600050540401600160005081905550600060005054600260005060008373ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600050819055505b5b5b50565b60006000600260005060008473ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060005054119050610268565b919050565b6000600060005054905061027c565b90565b6000600160005054905061028e565b90565b60006003600050600060408573ffffffffffffffffffffffffffffffffffffffff166c010000000000000000000000000281526014018481526020016040900360402081526020019081526020016000206000506001016000505490506102f3565b92915050565b600060008360020a905060008160036000506000868152602001908152602001600020600050600001600050541614610331576103d3565b8060036000506000858152602001908152602001600020600050600001600082828250541692505081905550600160005054600360005060008581526020019081526020016000206000506001016000818150546001019190508190551015610399576103d2565b600360005060008481526020019081526020016000206000600082016000506000905560018201600050600090555050600191506103d4565b5b5b509291505056"`
 
-var multisigAbi = [   {      "constant" : false,      "inputs" : [],      "name" : "totalOwners",      "outputs" : [         {            "name" : "",            "type" : "uint256"         }      ],      "type" : "function"   },   {      "constant" : false,      "inputs" : [         {            "name" : "addr",            "type" : "address"         }      ],      "name" : "isOwner",      "outputs" : [         {            "name" : "",            "type" : "bool"         }      ],      "type" : "function"   },   {      "constant" : false,      "inputs" : [],      "name" : "totalRequiredConfirmations",      "outputs" : [         {            "name" : "",            "type" : "uint256"         }      ],      "type" : "function"   },   {      "constant" : false,      "inputs" : [         {            "name" : "_newOwner",            "type" : "address"         }      ],      "name" : "addOwner",      "outputs" : [],      "type" : "function"   },   {      "constant" : false,      "inputs" : [         {            "name" : "_to",            "type" : "address"         },         {            "name" : "_value",            "type" : "uint256"         }      ],      "name" : "pendingConfirmations",      "outputs" : [         {            "name" : "",            "type" : "uint256"         }      ],      "type" : "function"   },   {      "constant" : false,      "inputs" : [         {            "name" : "_to",            "type" : "address"         },         {            "name" : "_value",            "type" : "uint256"         }      ],      "name" : "transact",      "outputs" : [],      "type" : "function"   }]
-```
+Unless you changed the basic parameters in the code, any proposal will have to be debated for at least a week until it can be executed. After that anyone—even a non-citizen—can demand the votes to be counted and the proposal to be executed. The votes are tallied and weighted at that moment and if the proposal is accepted then the ether is sent immediately and the proposal. If the votes end in a tie or the minimum quorum hasn’t been reached, the voting is kept open until the stalemate is resolved. If it loses, then it's archived and cannot be voted again.
 
-```js
-var sender = eth.accounts[0]
-var codeAddress = eth.sendTransaction({data: compiledCode, from: sender}); 
-```
+    var proposalID = 0;
+    daoInstance.executeProposal.sendTransaction(proposalID, {from: eth.accounts[0]});
 
-Wait minute until and use the code below to test if your code has been deployed.
 
-```js
-eth.getCode(codeAddress)
-```
+If the proposal passed then you should be able to see Bob's ethers arriving on his address:
 
-If it has, then do these commands to instantiate it locally.
+    eth.getBalance(registrar.addr("bob"));
 
-```js
-MultisigContract = eth.contract(multisigAbi)
-multisigInstance = MultisigContract.at(codeAddress)
-```
 
-The code is ready for use. The first thing you need to do is to add a new owner to it. If you want to test it with a friend, put his address here, but if you want to test it locally, you’ll need multiple accounts. Read the section “creating a new account” above, if you haven’t done so already.
+Try for yourself:  This is a very simple democracy contract, which could be vastly improved: currently, all proposals have the same debating time and are won by direct vote and simple majority.  Can you change that so it will have some situations, depending on the amount proposed, that the debate might be longer or that it would require a larger majority? Also think about some way where citizens didn't need to vote on every issue and could temporarily delegate their votes to a special representative. You might have also noticed that we added a tiny description for each proposal. This could be used as a title for the proposal or could be a hash of a larger document describing it in detail.
 
-```js
-//.call().totalOwners()
-//.call().totalRequiredConfirmations()
-//.pendingConfirmations(eth.accounts[4], web3.toWei(1, "ether"))
+### Let's go exploring!
 
-var newSigner = eth.accounts[1]
-multisigInstance.addOwner.sendTransaction(newSigner, {from: sender})
-```
+You have reached the end of this tutorial, but it's just the beginning of a great adventure. Look back and see how much you accomplished: you created a living, talking robot, your own cryptocurrency, raised funds through a trustless crowdfunding and used it to kickstart your own personal country. 
 
-The next step is to fund your collective account. All contracts can hold ether, just like a normal account. Notice that any ether sent to the contract belongs to it now, and will be only moved under the specific circumstances set up by its code. So before you send any significant amount, test it with a tiny bit of funds, because if anything goes wrong that money will be lost forever.
+For the sake of simplicity, the simple democratic organization you created can only send ether around, the native currency of ethereum. While that might be good enough for some, this is only scratching the surface of what can be done. In the ethereum network contracts have all the same rights as any normal user, meaning that your organization could be programmed in such way that it could do any of the transactions that you executed coming from your own accounts. 
 
-```js
-var amount = web3.toWei(0.01, "ether");
-eth.sendTransaction({from: sender, to: codeAddress, value: amount})
-```
+### What could happen next?
 
-Wait for a minute for the transaction to be picked up by the network and then you can execute this command to test the balance:
+* The greeter contract you created at the beginning could be improved to charge ether for its services and could funnel those funds into the DAO.
 
-```js
-eth.getBalance(codeAddress)
-```
+* The tokens you still control could be sold on a decentralized exchange or traded for goods and services to fund further develop the first contract and grow the organization.
 
-If the balance is not zero, this means that you have successfully funded your account, and that means that your previous transaction, adding a new owner to your multi-owned account, has also gone through. We’re going to ask for your contract now to send money to someone else. Generate a third account to be the beneficiary and type the following code:
+* Your DAO could own it's own name on the name registrar, and then change where it's redirecting in order to update itself if the token holders approved.
 
-```js
-var beneficiary = eth.accounts[2] 
-multisigInstance.transact.sendTransaction(beneficiary, 1000, {from: sender})
-```
+* The organization could hold not only ethers, but any kind of other coin created on ethereum, including assets whose value are tied to the bitcoin or dollar. 
 
-If you check the balance of the beneficiary or the contract, you’ll see that they haven’t changed, and this time it’s not a question of waiting a minute or so. It’s because for this particular contract’s transaction to go through, they need the approval of at least half, plus one, of the account owners. Since your contract is only owned by 2 accounts, it needs 2 approvals. In this case, this is done by having the second account send an identical transaction–same beneficiary and exact amount–as the previous:
+* The DAO could be programmed to allow a proposal with multiple transactions, some scheduled to the future. 
+It could also own shares of other DAO's, meaning it could vote on larger organization or be a part of a federation of DAO's
 
-```js
-multisigInstance.transact.sendTransaction(beneficiary, 1000, {from: newSigner})`
+* The Token Contract could be reprogrammed to hold ether or to hold other tokens and distribute it to the token holders, linking therefore the value of the token to the value of other assets, so paying dividends could be accomplished by simply moving funds to the token address
 
-Note: this transaction, because it’s intended to change the state of the blockchain, requires gas to be executed. If you just created the newSigner account and it doesn’t have any funds, it won’t be able to pay the gas for it to be executed. Check the section on sending transactions to learn how to send money to that account, before it can interact with the blockchain.
+This all means that this tiny society you created could grow, get funding from third parties, pay recurrent salaries, own any kind of cryptoassets and even use crowdsales to fund its activities. All with full transparency, complete accountability and complete immunity from any human interference. While the network lives the contracts will execute exactly the code they were created to execute, without any exception, forever.
 
-Now, wait a minute or so and check the balance of both the account and the beneficiary and you’ll see that the balance changed.
+So what will your contract be? Will it be a country, a company, a non-profit group? What will your code do? 
 
-```js
-eth.getBalance(beneficiary)
-eth.getBalance(codeAddress)
-```
-
-If the beneficiary now has any non zero funds means that you just created a contract with multiple owners. Think for a moment about the possibilities: you could generate the second signature in another device you own and have it as a second authentication device, such that if one of your main keys was compromised, your money would still be safe. Or you could have a friend or family use the other signature and use this contract as a joint account, or a trust fund. This could scale up to a small company, where the CFO would have to sign off with any payments coming out of the companies account. 
-
-You just created a Decentralized Autonomous Organization. It’s an organism made of robots and people that live in the blockchain. Just like the “Greeter” bot you created earlier, once it’s public it will always exist on the blockchain, following the exact rules it was supposed to do. Unless those were explicitly stated in its constitution, there’s nothing anyone can do to embezzle it’s funds or stop it, so exercise caution before launching one into the network.
-
-Try for yourself: Currently any owner can invite an unlimited amount of other owners. Not only there is a technical limitation because after 256 owners, then the contract will start having weird behaviors, but this is also a trust issue. You may trust someone to give a second signature, but not to invite unlimited other accounts. A single malicious user could takeover the whole account bg generating a hundred private accounts and being the only one in control of all the money. Can you fix this such issue? Maybe set a maximum number of owners, or limit the people who are able to invite more. Also see if you can change the contract to create a requirement of a minimum quorum in order for a proposal to pass.  If you can, then try to set a rule that if the transaction is above a certain value, it will require a supermajority, not a simple one. Can you figure out a way to get rid of the immigration office altogether and invite and ban members using an election?
+That's up to you.

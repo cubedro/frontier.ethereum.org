@@ -306,6 +306,8 @@ div.whatis {
 	position: relative;
 }
 
+
+
 .tutorial-end h3 {
 	padding: 30px 20px;
 	max-width: none;
@@ -933,22 +935,26 @@ figure.ethereum-logo {
 
 .main-tutorial code {
 	display: block;
-	background: #F5F2E6;
+	background: #FFF;
 	font-family: 'Roboto Mono', "Source Code pro", "Courier New", monospace;
 	white-space: pre;
 	font-size: 14px;
 	font-weight: 600;
-	padding: 10px 20px 20px;
-	margin: 30px 0;
-	border: solid 4px #D6CDAB;
+	padding: 20px;
+	margin: 30px -16px;
+	border: solid 4px #FCF5E3;
 	overflow: auto;
 }
 
 
-pre, code {
+code {
 	background: #F6E6CC;
 }
 
+pre {
+	background: transparent;
+	border: none;
+}
 /*footer {
 	background: #E4D0B7 url("../images/bg-footer.png");
 	-webkit-background-blend-mode: multiply;
@@ -1009,6 +1015,7 @@ footer {
 
 .inner-tutorial h3 {
 	padding-left: 20px;
+	max-width: none;
 }
 
 .inner-header {

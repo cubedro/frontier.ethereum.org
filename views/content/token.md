@@ -1,103 +1,153 @@
 
-# Coin
 
-Now that you have your name secured, let's create a currency for your country. Currencies are much more interesting and useful than they seem, they are in essence just a tradeable token, but can become much more, depending on how you use them. It's value depends on it's use: a token can be used to control access (an entrance ticket), can be used for voting rights in an organization (a share), can be placeholders for an asset held by a third party (a certificate of ownership) or even be simply used as an exchange of value within a context (a currency). 
+Now let's create a coin for your country. Coins are much more interesting and useful than they seem, they are in essence just a tradeable token, but can become much more, depending on how you use them. It's value depends on it's use: a token can be used to control access (an entrance ticket), can be used for voting rights in an organization (a share), can be placeholders for an asset held by a third party (a certificate of ownership) or even be simply used as an exchange of value within a community (a currency). 
 
 You could do all those things by creating a centralized server, but using an Ethereum token contract comes with some free qualities: for one, it's a decentralized service and tokens can be still exchanged even if the original service goes down for any reason. The code guarantees that no tokens will ever be created other than the ones set in the original code. Finally, by having each user hold it's own token, this eliminates the scenarios where one single server break in can result in the loss of funds from thousands of clients.
 
 This is the code for the contract we're building:
  
-```js
-contract token { 
-    mapping (address => uint) balances;
-  
-  // Initializes contract with 10 000 tokens to the creator of the contract
-  function token() {
-        balances[msg.sender] = 10000;
+
+    contract token { 
+        mapping (address => uint) public coinBalanceOf;
+      
+      /* Initializes contract with 10 000 tokens to the creator of the contract */
+      function token() {
+            coinBalanceOf[msg.sender] = 10000;
+        }
+      
+      /* Very simple trade function */
+        function sendCoin(address receiver, uint amount) returns(bool sufficient) {
+            if (coinBalanceOf[msg.sender] < amount) return false;
+            coinBalanceOf[msg.sender] -= amount;
+            coinBalanceOf[receiver] += amount;
+            return true;
+        }
+
     }
-  // Very simple trade function
-    function sendToken(address receiver, uint amount) returns(bool sufficient) {
-        if (balances[msg.sender] < amount) return false;
-        balances[msg.sender] -= amount;
-        balances[receiver] += amount;
-        return true;
-    }
-  
-  // Check balances of any account
-  function getBalance(address account) returns(uint balance){
-    return balances[account];
-  }
-  
-}
-```
 
-If you have ever programmed, you won't find it hard to understand what it does: it's a contract that generates 10 thousand tokens to the creator of the contract, and then allows anyone with a balance to send it to others.  
 
-So let's run it!
+If you have ever programmed, you won't find it hard to understand what it does: it's a contract that generates 10 thousand tokens to the creator of the contract, and then allows anyone with a balance to send it to others. These tokens are the minimum tradeable unit and cannot be subdivided, but for the final users could be presented as a 100 units subdividable by 100 subunits, so owning a single token would represent having 0.01% of the total. If your application needs more fine grain atomic divisibility, then just increase the initial issuance amount.
 
-```js
-var tokenSource = 'contract token { mapping (address => uint) balances;  function token() { balances[msg.sender] = 10000; } function sendToken(address receiver, uint amount) returns(bool sufficient) {        if (balances[msg.sender] < amount) return false;        balances[msg.sender] -= amount; balances[receiver] += amount;        return true; } function getBalance(address account) returns(uint balance){ return balances[account]; } }'
-```
+In this example we declared the variable "balance" to be public, this will automatically create a function that checks any accounts balance.
 
-Now let’s set up the contract, just like we did in the previous section. Since this is a more complex contract than the Greeter, we will add more gas than the default. Extra Gas is returned.
+**So let's run it!**
 
-```js
-var tokenCompiled = eth.compile.solidity(tokenSource).token
-var primaryAccount = eth.accounts[0]
-var tokenAddress = eth.sendTransaction({data: tokenCompiled.code, from: primaryAccount, gas:1000000}); 
-```
+    var tokenSource = 'contract token { mapping (address => uint) public balances; /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { balances[msg.sender] = 10000; } /* Very simple trade function */ function sendToken(address receiver, uint amount) returns(bool sufficient) { if (balances[msg.sender] < amount) return false; balances[msg.sender] -= amount; balances[receiver] += amount; return true; } }'
+
+Now let’s set up the contract, just like we did in the previous section..
+
+    var tokenCompiled = eth.compile.solidity(tokenSource)
+    var tokenAddress = eth.sendTransaction({data: tokenCompiled.token.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")}); 
 
 Wait minute until and use the code below to test if your code has been deployed.
 
-```js
-eth.getCode(tokenAddress)
-```
+    eth.pendingTransactions();
+
+    eth.getCode(tokenAddress)
 
 And then 
 
-```js
-tokenContract = eth.contract(tokenCompiled.info.abiDefinition)
-tokenInstance = new tokenContract(tokenAddress)
-```
+    tokenInstance = eth.contract(tokenCompiled.token.info.abiDefinition).at(tokenAddress)
+
 
 You can check your own balance with:
 
-```js
-tokenInstance.getBalance.call(primaryAccount)
-```
+    tokenInstance.balances.call(eth.accounts[0])
 
-It should have all the 10 000 coins that were created once the contract was published. Since there is not any other defined way for new coins to be issued, those are all that will ever exist. 
+It should have all the 10 000 tokens that were created once the contract was published. Since there is not any other defined way for new coins to be issued, those are all that will ever exist. 
 
 Now of course those tokens aren't very useful if you hoard them all, so in order to send them to someone else, use this command:
 
-```js
-tokenInstance.sendToken.sendTransaction(eth.accounts[1], 100, {from: primaryAccount})
-```
+    tokenInstance.sendToken.sendTransaction(eth.accounts[1], 1000, {from: eth.accounts[0]})
 
-The reason that the first command was `.call()` and the second is a `.sendTransaction()` is that the former is just a read operation and the latter is using gas to change the state of the blockchain, and as such, it needs to be set who is it coming from. Now, wait a minute and check both accounts balances:
+If a friend has registered a name on the registrar you can send it without knowing their address, doing this:
 
-```js
-tokenInstance.getBalance.call(eth.accounts([0])
-tokenInstance.getBalance.call(eth.accounts([1])
-```
+    tokenInstance.sendToken.sendTransaction(registrar.addr("Alice"), 2000, {from: eth.accounts[0]})
 
-**Try for yourself:** You just created your own cryptocurrency, imagine all the possibilities! Right now this cryptocurrency is quite limited as there will only ever be 10,000 coins and all are controlled by the coin creator, but you can change that. By adding the following function you issue a coin for everyone who finds an ethereum block:
 
-```js
-mapping (uint => address) miningReward;
-function claimMiningReward() {
-  if (msg.sender == block.coinbase && miningReward[block.number] == 0) {
-    balances[msg.sender] += 1;
-miningReward[block.number] = msg.sender;
-  }
-}
-```
+The reason that the first command was .call() and the second is a .sendTransaction() is that the former is just a read operation and the latter is using gas to change the state of the blockchain, and as such, it needs to be set who is it coming from. Now, wait a minute and check both accounts balances:
+
+    tokenInstance.balances.call(eth.accounts[0])
+    tokenInstance.balances.call(eth.accounts[1])
+    tokenInstance.balances.call(registrar.addr("Alice"))
+
+**Try for yourself: You just created your own cryptocurrency! Right now this cryptocurrency is quite limited as there will only ever be 10,000 coins and all are controlled by the coin creator, but you can change that. You could for example reward ethereum miners, by creating a transaction that will reward who found the current block:**
+
+    mapping (uint => address) miningReward;
+    function claimMiningReward() {
+      if (miningReward[block.number] == 0) {
+        balances[block.coinbase] += 1;
+    miningReward[block.number] = block.coinbase;
+      }
+    }
 
 You could modify this to anything else: maybe reward someone who finds a solution for a new puzzle, wins a game of chess, install a solar panel—as long as that can be somehow translated to a contract. Or maybe you want to create a central bank for your personal country, so you can keep track of hours worked, favors owed or control of property. In that case you might want to add a function to allow the bank to remotely freeze funds and destroy tokens if needed.
 
 
-##Future improvements, not yet implemented: 
+### Getting others to interact with your contract
 
-* [Formal proofing](https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format#documentation-output) is a way where the contract developer will be able to assert some invariant qualities of the contract, like the total cap of the coin.
-* [Meta coin standard](https://github.com/ethereum/cpp-ethereum/wiki/MetaCoin-API)is a proposed standardization of function names for coin and token contracts, to allow them to be automatically added to other ethereum contract that utilizes trading, like exchanges or escrow.
+The commands mentioned only work because you have tokenInstance instantiated on your local machine. If you send tokens to someone they won't be able to move them forward because they don't have the same object. In fact if you restart your console these objects will be deleted and the contracts you've been working on will be lost forever. So how do you instantiate the contract on a clean machine? 
+
+There are two ways. Let's start with the quick and dirty, providing your friends with a reference to your contract’s ABI:
+
+    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendToken',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{type:'function',constant:true,inputs:[{name:'',type:'address'}],name:'balance',outputs:[{name:'',type:'uint256'}]},{inputs:[],type:'constructor'}]).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
+
+Just replace the address at the end for your own token address, then anyone that uses this snippet will immediately be able to use your contract. Of course this will work only for this specific contract so let's analyze step by step and see how to improve this code so you'll be able to use it anywhere.
+
+First, if you register a name, then you won't need the hard coded address in the end. Select a nice coin name for you and try to reserve for yourself.
+
+    var tokenName = "MyFirstCoin"
+    registrar.reserve.sendTransaction(tokenName, {from: eth.accounts[0]});
+
+Wait for the previous transaction to be picked up and then set that name to point to your coin address:
+
+    registrar.setAddress.sendTransaction(tokenName, tokenAddress, true,{from: eth.accounts[0]});
+
+Wait a little bit for that transaction to be picked up too and test it:
+
+    registrar.addr("MyFirstCoin")
+
+This should now return your token address, meaning that now the previous code to instantiate could use a name instead of an address.
+
+    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendToken',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{type:'function',constant:true,inputs:[{name:'',type:'address'}],name:'balance',outputs:[{name:'',type:'uint256'}]},{inputs:[],type:'constructor'}]).at(registrar.addr("MyFirstCoin"))
+
+This also means that the owner of the coin can update the coin by pointing the registrar to the new contract. This would, of course, require the coin holders trust the owner set at  registrar.owner("MyFirstCoin")
+
+The code is still long and not very friendly, and that's mostly because of the ABI that uses most of the contract code space. Ideally the only thing the user should need to know to access the contract would be it's name. In order to do that we have to register the abi somewhere also, which what the Contract Metadata Registry is for.
+
+To  initiate the process, execute this:
+
+    admin.contractInfo.newRegistry(eth.accounts[0])
+
+In the future Ethereum will have support for a pure hash-based content system to allow any data to be saved in the P2P network, but for now we'll have to create some files and upload them manually. First create a file on your system (e.g. in your desktop, if you're messy like me) and add its path like this:
+
+    var localFilePath = '/Users/yourusername/Desktop/abi.json'
+
+Now use this line to write to that file and save its hash:
+
+    contentHash = admin.contractInfo.register(eth.accounts[0], tokenAddress, tokenCompiled.token, localFilePath)
+
+You now have to put the .json file you just created somewhere publicly accessible. If you have an http server you can just drag into it, but you can also use a service like PasteBin or Gist. Create a new unlisted/private file, copy the content from the file you just created and save it. Then click the "raw" link and get the link like this:
+
+    var remoteFilePath = 'https://gist.githubusercontent.com/alexvandesande/ee0d34f5ac47937b6330/raw/6813c4e5eee9af33a1728565141ca4572530ffcd/abi.json'
+
+Now finally you can register the ABI with:
+
+    admin.contractInfo.registerUrl(eth.accounts[0], contentHash, remoteFilePath)
+
+Wait for the miners to pick it up and check if everything went well with:
+
+    admin.contractInfo.get(registrar.addr(tokenName)).AbiDefinition
+
+This should return the ABI. If it doesn't, then double check the process and maybe try uploading your file to a different host. Now in order to instantiate the contract in any computer all one has to know is either its address or registered name.
+
+    var tokenAddress = registrar.addr("MyFirstCoin")
+    var tokenInstance = eth.contract(admin.contractInfo.get(tokenAddress).AbiDefinition).at(tokenAddress)
+
+
+### Learn More 
+
+* [Meta coin standard](https://github.com/ethereum/wiki/wiki/Standardized_Contract_APIs) is a proposed standardization of function names for coin and token contracts, to allow them to be automatically added to other ethereum contract that utilizes trading, like exchanges or escrow.
+
+* [Formal proofing](https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format#documentation-output) is a way where the contract developer will be able to assert some invariant qualities of the contract, like the total cap of the coin. *Not yet implemented*.
 
