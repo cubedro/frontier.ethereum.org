@@ -580,7 +580,7 @@ a.button:hover {
 
 .community li.canary {
 	background-image: url("../images/icons/canary.svg");	
-	background-size: 40px 40px;
+	background-size: 30px 30px;
 	background-position: left top;
 	background-repeat: no-repeat;	
 	min-height: 50px;
