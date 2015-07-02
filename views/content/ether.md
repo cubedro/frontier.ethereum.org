@@ -1,3 +1,10 @@
+
+## What is Ether?
+
+Ether is a necessary element -- a fuel -- for operating the distributed application software platform we are building: Ethereum. Without the requirement of payment of ether for every computational step and storage operation within the system, infinite loops or excessive storage demands could bog down Ethereum and effectively destroy it.
+
+
+
 Already feeling comfortable? Time to get some ether. There are three different ways:
 
 ### 1. Get ether from someone else

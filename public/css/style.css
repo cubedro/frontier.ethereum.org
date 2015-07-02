@@ -88,9 +88,8 @@ a:hover {
 	letter-spacing: -1px;
 }
 
-header, footer {
+header {
 	padding: 20px 0px;
-	color: #8A92B2;
 	color: #fafafa;
 }
 
@@ -117,6 +116,8 @@ header {
 div.scrollme.intro {
 	background: #1f0c05;
 	overflow: hidden;
+	position: relative;
+	z-index: 40;
 }
 
 div.scrollme.row.introduction {
@@ -225,11 +226,13 @@ div.whatis {
 	color: #F6E6CC;
 	background: #1f0c05;
 	position: relative;
+	z-index: 50;
 }
 
 
 .main-tutorial {
-	background: #FFFAEE url("../images/bg.png");
+	/*background: #FFFAEE url("../images/bg.png");*/
+	background: #FFF url("../images/bg.png");
 	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
 	font-size: 18px;
 	color: #443A37;
@@ -241,7 +244,8 @@ div.whatis {
 }
 
 .main-tutorial.even {
-	background: #FFF5DE url("../images/bg.png");
+	/*background: #FFF5DE url("../images/bg.png");*/
+	background: #FFFAEE url("../images/bg.png");
 
 }
 
@@ -592,13 +596,13 @@ a.button:hover {
 	/*visibility: hidden;*/
 	opacity: 0;
 	font-size: 80%;
-	transition: opacity 2s;
+	transition: opacity 2s ease-out;
 }
 
 .community li.canary:hover p {
 	/*visibility: visible;*/
 	opacity: 1;
-	transition: opacity 0.5s;	
+	transition: opacity 0.25s ease-out;	
 }
 
 .press ul {
@@ -623,10 +627,12 @@ a.button:hover {
 	height: 50px;
 	overflow: hidden;
 	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
 }
 
 .press li:last-child {
-	padding-bottom: 100px;
+	margin-bottom: 100px;
 }
 
 .press li span {
@@ -888,6 +894,16 @@ figure.moon .moon-rocket {
 }
 
 
+figure.ethereum-logo {
+	display: block;
+	background-image: url("../images/ethereum-logo.png");
+	width: 301px;
+	height: 287px;
+	background-size: contain;
+	margin: 0 auto;
+}
+
+
 .start-menu {
 	-webkit-perspective: 2000;
 	-moz-perspective: 2000;
@@ -944,7 +960,10 @@ pre, code {
 }*/
 
 footer {
-	background: #FFF5DE url("../images/bg.png");
+	background: #FFFAEE url("../images/bg.png");
+	background-blend-mode: multiply;	
+	position: relative;
+  	z-index: 100;
 }
 
 .footer {
@@ -992,6 +1011,115 @@ footer {
 	padding-left: 20px;
 }
 
+.inner-header {
+	padding: 100px;
+	text-align: center;
+	background: #1f0c05;
+}
+
+.inner-header h3 {
+	padding-top: 20px;
+	text-transform:  uppercase;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+	font-weight: 200;
+	font-size: 200%;
+	color: #eb453e;
+}
+
+
+.foundation-page h3 {
+	padding: 20px 20px 10px;
+	clear: both;
+}
+
+.foundation-page img[alt*="Portrait"] {
+	width: 200px;
+	height: 200px;
+	float: right;
+	margin: 0 0 40px 40px;
+}
+
+.ethereum-projects h4  {
+	text-align: center;
+	clear: both;
+	padding: 60px 0 10px;
+	color: #eb453e;
+}
+
+.ethereum-projects  ul {
+	padding-left: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
+
+
+.ethereum-projects li {
+	display: block;
+	max-width: 200px;
+	padding: 20px;
+	text-align: center;
+	font-size: 80%;
+}
+
+
+.ethereum-projects a {
+	display: block;
+	width: 100%;
+	text-indent: -500px;	
+	overflow: hidden;
+	height: 40px;
+	margin-bottom: 20px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.ethereum-projects a[href='http://augur.net'] {
+	background-image: url('../images/icons/AUGUR.png');
+}
+
+.ethereum-projects a[href='https://etherex.org/'] {
+	background-image: url('../images/icons/EX.png');
+}
+
+
+.ethereum-projects a[href='https://www.theprotocol.tv/adept-demo-ibm-samsung'] {
+	background-image: url('../images/icons/ibm_white.png');
+}
+
+.ethereum-projects a[href='http://ether.fund'] {
+	background-image: url('../images/icons/ETHERFUND.png');
+}
+
+.ethereum-projects a[href='http://ethergit.com'] {
+	background-image: url('../images/icons/ETHERGIT_WHITE.png');
+}
+
+.ethereum-projects a[href='http://airlock.me/'] {
+	background-image: url('../images/icons/airlock.png');
+}
+
+.ethereum-projects a[href='https://www.provenance.org'] {
+	background-image: url('../images/icons/Provenancve-Logo-&-Logotype-White.png');
+}
+
+.ethereum-projects a[href='https://dgx.io/'] {
+	background-image: url('../images/icons/digixglobal_logo_dark.png');
+}
+
+.ethereum-projects a[href='http://weifund.io/'] {
+	background-image: url('../images/icons/weifundalpha.png');
+}
+
+.ethereum-projects a[href='http://www.lazooz.net/'] {
+	background-image: url('../images/icons/new-logo.png');
+}
+
+.ethereum-projects a[href='http://main.cubespawn.com'] {
+	background-image: url('../images/icons/CUBESPAWN_2.png');
+}
 
 @media (-webkit-min-device-pixel-ratio: 2) {
 	.introduction h1 , header .title {
@@ -1032,6 +1160,9 @@ footer {
 		width: 100%;
 	}
 
+	.breadcrumb.index a {
+		display: none;
+	}
 	/*figure.ethereum-network{
 		height: 150px !important;
 	}
@@ -1104,13 +1235,30 @@ footer {
 		background-image: url("../images/diamond-icon@2x.png");
 	}
 
+	.breadcrumb.index {
+		padding-right: 10px;
+		display: flex;
+		align-items: center;
+	}
+
+	.breadcrumb.index strong {
+		flex: 1;
+	}
+
+	.breadcrumb.index a {
+		padding: 0 5px;
+		font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+  		text-transform: uppercase;
+	}
+
 	.main-tutorial {
 		background-image: url("../images/bg@2x.png");
 		background-size: 324px 326px !important;
 	}
 
 	.main-tutorial {
-		background: #FFFAEE url("../images/bg@2x.png");
+		/*background: #FFFAEE url("../images/bg@2x.png");*/
+		background: #FFF url("../images/bg@2x.png");
 	}
 	
 	.recipe {
@@ -1266,6 +1414,10 @@ footer {
 		background-image: url("../images/moon-rocket@2x.png");
 	}
 
+
+	figure.ethereum-logo {
+
+	}
 
 	.community ul li a[href='http://blog.ethereum.org'] {
 		background-image: url("../images/icons/icon-blog@2x.png");

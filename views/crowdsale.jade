@@ -3,11 +3,11 @@ extends layout
 block content
   include warning.jade
 
-  div#tutorial-start.main-tutorial.inner-tutorial
+  div#tutorial-start.main-tutorial.inner-tutorial.even
     div.container
       div.row
         div.col-md-12.tutorial.scrollme
-          div.breadcrumb.animateme(data-when="exit", data-from="1", data-to="0.8", data-opacity="0", data-translatey="-20") 
+          div.breadcrumb.animateme(data-when="enter", data-from="1", data-to="0.8", data-opacity="0", data-translatey="-20") 
             a(href="/") Ethereum Frontier 
             | » 
             strong Create a crowdsale
@@ -25,14 +25,14 @@ block content
 
           a(href="#warning").cannot-continue You cannot continue until you read and understand the dangers
 
-  div.main-tutorial.hidden.inner-tutorial.even
+  div.main-tutorial.hidden.inner-tutorial
     div.container  
       div.row
         div.col-md-12
           include:md content/crowdsale.md        
 
 
-  div.main-tutorial.hidden
+  div.main-tutorial.hidden.even
     div.container   
       div.row
         div.col-md-12.tutorial
