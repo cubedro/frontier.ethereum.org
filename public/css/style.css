@@ -578,6 +578,29 @@ a.button:hover {
 	background-image: url("../images/icons/icon-meetup.png");
 }
 
+.community li.canary {
+	background-image: url("../images/icons/canary.svg");	
+	background-size: 40px 40px;
+	background-position: left top;
+	background-repeat: no-repeat;	
+	min-height: 50px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.community li.canary p {
+	/*visibility: hidden;*/
+	opacity: 0;
+	font-size: 80%;
+	transition: opacity 2s;
+}
+
+.community li.canary:hover p {
+	/*visibility: visible;*/
+	opacity: 1;
+	transition: opacity 0.5s;	
+}
+
 .press ul {
 	list-style: none;
 	padding-left: 140px;
