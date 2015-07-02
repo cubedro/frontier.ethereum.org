@@ -520,6 +520,150 @@ a.button:hover {
 	color: #eb453e;
 }
 
+/* FOOTER */
+
+.footer h2 {
+	padding-top: 20px;
+	padding-bottom: 0;
+}
+
+.copyright {
+	font-size: 80%;
+	text-align: center;
+	opacity: 0.5;
+}
+
+.copyright:hover {
+	opacity: 1;
+}
+
+.developers ul {
+	padding-left: 10px;
+	color: #F6E6CC;
+}
+
+
+.community ul {
+	padding-left: 0;
+	list-style: none;
+}
+
+.community ul li a {
+	background-size: 40px 40px;
+	padding: 10px 40px;
+	display: block;
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+.community ul li a[href='http://blog.ethereum.org'] {
+	background-image: url("../images/icons/icon-blog.png");
+}
+.community ul li a[href='http://forum.ethereum.org'] {
+	background-image: url("../images/icons/icon-forum.png");
+}
+.community ul li a.reddit {
+	background-image: url("../images/icons/icon-reddit.png");
+}
+.community ul li a.youtube {
+	background-image: url("../images/icons/icon-youtube.png");
+}
+.community ul li a.twitter {
+	background-image: url("../images/icons/icon-twitter.png");
+}
+.community ul li a.facebook {
+	background-image: url("../images/icons/icon-facebook.png");
+}
+.community ul li a.meetups {
+	background-image: url("../images/icons/icon-meetup.png");
+}
+
+.press ul {
+	list-style: none;
+	padding-left: 140px;
+	position: relative;
+	max-height: 320px;
+	overflow: auto;
+}
+
+.press:after {
+	position: absolute;
+	content: " ";
+	left: 0;
+	right: 0;
+	bottom: 80px;
+	height: 80px;
+	background: linear-gradient(transparent, #1f0c05);
+}
+
+.press li {
+	height: 50px;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.press li:last-child {
+	padding-bottom: 100px;
+}
+
+.press li span {
+	display: block;
+	position: absolute;
+	left: 0px;
+	overflow: hidden;
+	padding-left: 120px;
+	height: 50px;
+	width: 0;
+	background-size: 120px 50px;
+	background-repeat: no-repeat;
+}
+
+.press li span.press-fast-company {
+	background-image: url("../images/icons/fast-company.png");
+}
+
+.press > a {
+	text-align: center;
+	background: #290F03;
+	border-radius: 4px;
+	display: block;
+	padding: 10px;
+	margin: 20px 0;
+}
+
+.press > a:hover {
+	text-decoration: none;
+	background: #501A04;
+}
+
+.press li span.press-reason {
+	background-image: url("../images/icons/reason.png");
+}
+.press li span.press-forbes {
+	background-image: url("../images/icons/forbes.png");
+}
+.press li span.press-telegraph {
+	background-image: url("../images/icons/the-telegraph.png");
+}
+.press li span.press-wired {
+	background-image: url("../images/icons/wired.png");
+}
+.press li span.press-wsj {
+	background-image: url("../images/icons/wall-street-journal.png");
+}
+.press li span.press-aljazeera {
+	background-image: url("../images/icons/al-jazeera.png");
+}
+.press li span.press-bloomberg {
+	background-image: url("../images/icons/bloomberg.png");
+}
+.press li span.press-new-scientist {
+	background-image: url("../images/icons/new-scientist.png");
+}
+
+
+/* FIGURES */
+
 figure.ethereum-network {
 	display: block;
 	width: 100%;
@@ -766,7 +910,7 @@ pre, code {
 	background: #F6E6CC;
 }
 
-footer {
+/*footer {
 	background: #E4D0B7 url("../images/bg-footer.png");
 	-webkit-background-blend-mode: multiply;
 	background-blend-mode: multiply;
@@ -774,6 +918,10 @@ footer {
 	font-size: 14px;
 	border-top: 3px solid #eb453e;
 	color: #F6E6CC;
+}*/
+
+footer {
+	background: #FFF5DE url("../images/bg.png");
 }
 
 .footer {
@@ -1094,5 +1242,59 @@ footer {
 	figure.moon .moon-rocket {
 		background-image: url("../images/moon-rocket@2x.png");
 	}
+
+
+	.community ul li a[href='http://blog.ethereum.org'] {
+		background-image: url("../images/icons/icon-blog@2x.png");
+	}
+	.community ul li a[href='http://forum.ethereum.org'] {
+		background-image: url("../images/icons/icon-forum@2x.png");
+	}
+	.community ul li a.reddit {
+		background-image: url("../images/icons/icon-reddit@2x.png");
+	}
+	.community ul li a.youtube {
+		background-image: url("../images/icons/icon-youtube@2x.png");
+	}
+	.community ul li a.twitter {
+		background-image: url("../images/icons/icon-twitter@2x.png");
+	}
+	.community ul li a.facebook {
+		background-image: url("../images/icons/icon-facebook@2x.png");
+	}
+	.community ul li a.meetups {
+		background-image: url("../images/icons/icon-meetup@2x.png");
+	}
+
+
+	.press li span.press-fast-company {
+		background-image: url("../images/icons/fast-company@2x.png");
+	}	
+	.press li span.press-reason {
+		background-image: url("../images/icons/reason@2x.png");
+	}
+	.press li span.press-forbes {
+		background-image: url("../images/icons/forbes@2x.png");
+	}
+	.press li span.press-telegraph {
+		background-image: url("../images/icons/the-telegraph@2x.png");
+	}
+	.press li span.press-wired {
+		background-image: url("../images/icons/wired@2x.png");
+	}
+	.press li span.press-wsj {
+		background-image: url("../images/icons/wall-street-journal@2x.png");
+	}
+	.press li span.press-aljazeera {
+		background-image: url("../images/icons/al-jazeera@2x.png");
+	}
+	.press li span.press-bloomberg {
+		background-image: url("../images/icons/bloomberg@2x.png");
+	}
+	.press li span.press-new-scientist {
+		background-image: url("../images/icons/new-scientist@2x.png");
+	}
+
+
 
 }
