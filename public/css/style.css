@@ -1128,6 +1128,10 @@ footer {
 	background-image: url('../images/icons/CUBESPAWN_2.png');
 }
 
+.ethereum-projects a[href='http://slock.it'] {
+	background-image: url('../images/icons/logo_schwarz.png');
+}
+
 @media (-webkit-min-device-pixel-ratio: 2) {
 	.introduction h1 , header .title {
 		background-image: url('../images/Title+Logo@2x.png');
