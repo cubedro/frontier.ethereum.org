@@ -1,8 +1,13 @@
 
+## The Coin 
 
-Now let's create a coin for your country. Coins are much more interesting and useful than they seem, they are in essence just a tradeable token, but can become much more, depending on how you use them. It's value depends on it's use: a token can be used to control access (an entrance ticket), can be used for voting rights in an organization (a share), can be placeholders for an asset held by a third party (a certificate of ownership) or even be simply used as an exchange of value within a community (a currency). 
+What is a coin? Coins are much more interesting and useful than they seem, they are in essence just a tradeable token, but can become much more, depending on how you use them. It's value depends what you do with it: a token can be used to control access (**an entrance ticket**), can be used for voting rights in an organization (**a share**), can be placeholders for an asset held by a third party (**a certificate of ownership**) or even be simply used as an exchange of value within a community (**a currency**). 
 
-You could do all those things by creating a centralized server, but using an Ethereum token contract comes with some free qualities: for one, it's a decentralized service and tokens can be still exchanged even if the original service goes down for any reason. The code guarantees that no tokens will ever be created other than the ones set in the original code. Finally, by having each user hold it's own token, this eliminates the scenarios where one single server break in can result in the loss of funds from thousands of clients.
+You could do all those things by creating a centralized server, but using an Ethereum token contract comes with some free functionalities: for one, it's a decentralized service and tokens can be still exchanged even if the original service goes down for any reason. The code guarantees that no tokens will ever be created other than the ones set in the original code. Finally, by having each user hold it's own token, this eliminates the scenarios where one single server break in can result in the loss of funds from thousands of clients.
+
+You could create your own token on a different blockchain, but creating on ethereum is easier—so you can focus your energy on the innovation that will make your coin stand out—, and it's more secure, as your security is provided by all the miners who are supporting the ethereum network. Finally, by creating your token in Ethereum, your coin will be compatible with any other contract that works in ethereum.
+
+### The Code
 
 This is the code for the contract we're building:
  
@@ -26,13 +31,15 @@ This is the code for the contract we're building:
     }
 
 
-If you have ever programmed, you won't find it hard to understand what it does: it's a contract that generates 10 thousand tokens to the creator of the contract, and then allows anyone with a balance to send it to others. These tokens are the minimum tradeable unit and cannot be subdivided, but for the final users could be presented as a 100 units subdividable by 100 subunits, so owning a single token would represent having 0.01% of the total. If your application needs more fine grain atomic divisibility, then just increase the initial issuance amount.
+If you have ever programmed, you won't find it hard to understand what it does: it is a contract that generates 10 thousand tokens to the creator of the contract, and then allows anyone with enough balance to send it to others. These tokens are the minimum tradeable unit and cannot be subdivided, but for the final users could be presented as a 100 units subdividable by 100 subunits, so owning a single token would represent having 0.01% of the total. If your application needs more fine grain atomic divisibility, then just increase the initial issuance amount.
 
-In this example we declared the variable "balance" to be public, this will automatically create a function that checks any accounts balance.
+In this example we declared the variable "coinBalanceOf" to be public, this will automatically create a function that checks any accounts balance.
+
+### Compile and Deploy
 
 **So let's run it!**
 
-    var tokenSource = 'contract token { mapping (address => uint) public balances; /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { balances[msg.sender] = 10000; } /* Very simple trade function */ function sendToken(address receiver, uint amount) returns(bool sufficient) { if (balances[msg.sender] < amount) return false; balances[msg.sender] -= amount; balances[receiver] += amount; return true; } }'
+    var tokenSource = 'contract token { mapping (address => uint) public coinBalanceOf; /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { coinBalanceOf[msg.sender] = 10000; } /* Very simple trade function */ function sendCoin(address receiver, uint amount) returns(bool sufficient) { if (coinBalanceOf[msg.sender] < amount) return false; coinBalanceOf[msg.sender] -= amount; coinBalanceOf[receiver] += amount; return true; } }'
 
 Now let’s set up the contract, just like we did in the previous section..
 
@@ -49,29 +56,32 @@ And then
 
     tokenInstance = eth.contract(tokenCompiled.token.info.abiDefinition).at(tokenAddress)
 
+### Check balance and send coins
 
-You can check your own balance with:
+If everything worked correctly, you should be able to check your own balance with:
 
-    tokenInstance.balances.call(eth.accounts[0])
+    tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of tokens"
 
 It should have all the 10 000 tokens that were created once the contract was published. Since there is not any other defined way for new coins to be issued, those are all that will ever exist. 
 
 Now of course those tokens aren't very useful if you hoard them all, so in order to send them to someone else, use this command:
 
-    tokenInstance.sendToken.sendTransaction(eth.accounts[1], 1000, {from: eth.accounts[0]})
+    tokenInstance.sendCoin.sendTransaction(eth.accounts[1], 1000, {from: eth.accounts[0]})
 
 If a friend has registered a name on the registrar you can send it without knowing their address, doing this:
 
-    tokenInstance.sendToken.sendTransaction(registrar.addr("Alice"), 2000, {from: eth.accounts[0]})
+    tokenInstance.sendCoin.sendTransaction(registrar.addr("Alice"), 2000, {from: eth.accounts[0]})
 
 
 The reason that the first command was .call() and the second is a .sendTransaction() is that the former is just a read operation and the latter is using gas to change the state of the blockchain, and as such, it needs to be set who is it coming from. Now, wait a minute and check both accounts balances:
 
-    tokenInstance.balances.call(eth.accounts[0])
-    tokenInstance.balances.call(eth.accounts[1])
-    tokenInstance.balances.call(registrar.addr("Alice"))
+    tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of tokens"
+    tokenInstance.coinBalanceOf.call(eth.accounts[1])/100 + "% of tokens"
+    tokenInstance.coinBalanceOf.call(registrar.addr("Alice"))/100 + "% of tokens"
 
-**Try for yourself: You just created your own cryptocurrency! Right now this cryptocurrency is quite limited as there will only ever be 10,000 coins and all are controlled by the coin creator, but you can change that. You could for example reward ethereum miners, by creating a transaction that will reward who found the current block:**
+### Improvement suggestions
+
+Right now this cryptocurrency is quite limited as there will only ever be 10,000 coins and all are controlled by the coin creator, but you can change that. You could for example reward ethereum miners, by creating a transaction that will reward who found the current block:
 
     mapping (uint => address) miningReward;
     function claimMiningReward() {
@@ -81,16 +91,16 @@ The reason that the first command was .call() and the second is a .sendTransacti
       }
     }
 
-You could modify this to anything else: maybe reward someone who finds a solution for a new puzzle, wins a game of chess, install a solar panel—as long as that can be somehow translated to a contract. Or maybe you want to create a central bank for your personal country, so you can keep track of hours worked, favors owed or control of property. In that case you might want to add a function to allow the bank to remotely freeze funds and destroy tokens if needed.
+You could modify this to anything else: maybe reward someone who finds a solution for a new puzzle, wins a game of chess, install a solar panel—as long as that can be somehow translated to a contract. Or maybe you want to create a central bank for your personal country, so you can keep track of hours worked, favors owed or control of property. In that case you might want to add a function to allow the bank to remotely freeze funds and destroy tokens if needed. 
 
 
-### Getting others to interact with your contract
+### Register a name for your coin
 
 The commands mentioned only work because you have tokenInstance instantiated on your local machine. If you send tokens to someone they won't be able to move them forward because they don't have the same object. In fact if you restart your console these objects will be deleted and the contracts you've been working on will be lost forever. So how do you instantiate the contract on a clean machine? 
 
 There are two ways. Let's start with the quick and dirty, providing your friends with a reference to your contract’s ABI:
 
-    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendToken',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{type:'function',constant:true,inputs:[{name:'',type:'address'}],name:'balance',outputs:[{name:'',type:'uint256'}]},{inputs:[],type:'constructor'}]).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
+    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' } ] ).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
 
 Just replace the address at the end for your own token address, then anyone that uses this snippet will immediately be able to use your contract. Of course this will work only for this specific contract so let's analyze step by step and see how to improve this code so you'll be able to use it anywhere.
 
@@ -109,9 +119,14 @@ Wait a little bit for that transaction to be picked up too and test it:
 
 This should now return your token address, meaning that now the previous code to instantiate could use a name instead of an address.
 
-    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendToken',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{type:'function',constant:true,inputs:[{name:'',type:'address'}],name:'balance',outputs:[{name:'',type:'uint256'}]},{inputs:[],type:'constructor'}]).at(registrar.addr("MyFirstCoin"))
+    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' } ] ).at(registrar.addr("MyFirstCoin"))
 
 This also means that the owner of the coin can update the coin by pointing the registrar to the new contract. This would, of course, require the coin holders trust the owner set at  registrar.owner("MyFirstCoin")
+
+
+### Register the ABI
+
+__OPTIONAL AND NOT RECOMMENDED__ 
 
 The code is still long and not very friendly, and that's mostly because of the ABI that uses most of the contract code space. Ideally the only thing the user should need to know to access the contract would be it's name. In order to do that we have to register the abi somewhere also, which what the Contract Metadata Registry is for.
 

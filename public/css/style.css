@@ -81,13 +81,6 @@ a:hover {
 	font-weight: 600;
 }
 
-.btn {
-	text-transform: uppercase;
-	font-family: 'Holtwood One SC', serif;
-	font-size: 13px;
-	letter-spacing: -1px;
-}
-
 header {
 	padding: 20px 0px;
 	color: #fafafa;
@@ -1246,21 +1239,28 @@ footer {
 		background-image: url("../images/diamond-icon@2x.png");
 	}
 
-	.breadcrumb.index {
+	.breadcrumb {
 		padding-right: 10px;
 		display: flex;
+	}
+
+	.breadcrumb.index {
 		align-items: center;
 	}
 
-	.breadcrumb.index strong {
+	.breadcrumb strong {
 		flex: 1;
 	}
 
-	.breadcrumb.index a {
+	.breadcrumb a {
 		padding: 0 5px;
 		font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
   		text-transform: uppercase;
-	}
+	}	
+
+	.breadcrumb a.index {
+		font-family: 'Wicked-Grit', Arial, sans-serif serif;
+  	}
 
 	.main-tutorial {
 		background-image: url("../images/bg@2x.png");

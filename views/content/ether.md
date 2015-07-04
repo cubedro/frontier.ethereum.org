@@ -5,15 +5,9 @@ Ether is a necessary element -- a fuel -- for operating the distributed applicat
 
 Already feeling comfortable? Time to get some ether. There are three different ways:
 
-### 1. Get ether from someone else
 
-That is by far the easiest way to get ether, but you need to know someone who is willing to give you a hand. If you have such a friend, then type:
+## Get Ether
 
- 
-    eth.accounts[0]
- 
-
-Copy the address and send it to them hoping to receive some love through the ether. If you don't know anyone who can provide it for you, you can use a faucet, which hand out test ether for free. Try the Zerogox or EtherParty faucets.  If the faucets are not online for some reason, you can also try asking directly to the community on IRC. 
 
 ### 2. Mining ether
 
@@ -56,6 +50,16 @@ Now get your presale file on your computer and find the path to it. Finally, typ
  
 
 This will prompt for your password and imports your ether presale account. It can be used non-interactively with the --password option taking a passwordfile as argument containing the wallet password in cleartext.
+
+### Get ether from someone else
+
+That is by far the easiest way to get ether, but you need to know someone who is willing to give you a hand. If you have such a friend, then type:
+
+ 
+    eth.accounts[0]
+ 
+
+Copy the address and send it to them hoping to receive some love through the ether. If you don't know anyone who can provide it for you, you can use a faucet, which hand out test ether for free. Try the Zerogox or EtherParty faucets.  If the faucets are not online for some reason, you can also try asking directly to the community on IRC. 
 
 ## Sending your first transaction
 

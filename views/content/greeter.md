@@ -33,7 +33,7 @@ Now that you’ve mastered the basics of Ethereum, let’s move into your first 
             if (input == "") {  return "Hello, World"; }
             return input; 
         }
-       
+
         // Function to recover the funds on the contract
         function kill() {
             if (msg.sender == admin) {
@@ -42,11 +42,38 @@ Now that you’ve mastered the basics of Ethereum, let’s move into your first 
         }
     }
 
+The Greeter is an intelligent digital entity that lives on the blockchain and is able to have conversations with anyone who interacts with it, based on its input. It might not be a talker, but it’s a great listener. Here is it's code:
 
 
-As you can see, the Greeter is an intelligent digital entity that lives on the blockchain and is able to have conversations with anyone who interacts with it, based on its input. It might not be a talker, but it’s a great listener.
+    contract owned {
+        /* this function is executed at initialization and sets the owner of the contract */
+        function owned() { owner = msg.sender; }
+        address owner;
+    }
 
-Before you are able to upload it to the network, you need two things: the compiled code, and the Application Binary Interface, which is a sort of user guide on how to interact with the contract.
+    contract mortal is owned {
+        /* Function to recover the funds on the contract */
+        function kill() { if (msg.sender == owner) suicide(owner); }
+    }
+
+    contract greeter is mortal {
+        /* Define Answer */
+        event answer(bytes32 answer);
+
+        /* main function */
+        function greet(bytes32 input) returns (bytes32) {
+            if (input == "") answer("Hello, World") ; 
+            else answer(input); 
+        }
+    }
+
+You'll notice that there are three different contracts in this code, _"owned"_, _"mortal"_ and _"greeter"_, and each of them mention the previous one. This is because in Solidity has *inheritance*, meaning that one contract can inherit charateristics of another. This is very useful to simplify coding because some common traits of contracts don't need to be rewritten every time, and all contracts can be written in smaller, more readable chunks.
+
+_"Mortal"_ and _"owned" simply means that the greeter contract can be killed by it's owner, to clean up the blockchain and recover funds locked into it. Contracts in ethereum are, by default, immortal and have no owner, meaning that once deployed the author has no special privileges anymore. Consider this before uploading.
+
+### Compiling your contract
+
+Before you are able to upload it thou, you'll need two things: the compiled code, and the Application Binary Interface, which is a sort of user guide on how to interact with the contract.
 
 The first you can get by using a compiler. You should have a solidity compiler built in on your geth console. To test it, use this command:
 
@@ -58,22 +85,25 @@ If you have it installed, it should output something like this:
 
 If instead the command returns an error, then read the documentation on how to install a compiler, use Aleth zero or use the  online solidity compiler. 
 
-If you have Geth Solidity Compiler installed,  you need now reformat by removing spaces so it fits into a string variable (there are some online tools that will do this):
+If you have Geth Solidity Compiler installed,  you need now reformat by removing spaces so it fits into a string variable [(there are some online tools that will do this)](http://www.textfixer.com/tools/remove-line-breaks.php):
 
-    var greeterSource = 'contract greeter { address admin; function greeter() { admin = msg.sender; } function greet(bytes32 input) returns (bytes32) { if (input == "") { return "Hello, World"; } return input; } function kill() { if (msg.sender == admin) { suicide(admin); } }}'
+    var greeterSource = 'contract owned { /* this function is executed at initialization and sets the owner of the contract */ function owned() { owner = msg.sender; } address owner; } contract mortal is owned { /* Function to recover the funds on the contract */ function kill() { if (msg.sender == owner) suicide(owner); } } contract greeter is mortal { /* Define Answer */ event answer(bytes32 answer); /* main function */ function greet(bytes32 input) returns (bytes32) { if (input == "") answer("Hello, World") ; else answer(input); } }'
 
 
 
 Once you successfully executed the above, compile it and publish to the network using the following commands:
 
     var greeterCompiled = eth.compile.solidity(greeterSource)
-    var greeterAddress = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")}); 
+ 
+    var greeterAddress = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(1, "microether")}); 
+
+The code above compiles the code and publishes it to the network. You are paying gas and 
 
 You will probably be asked for the password you picked in the beginning. You are choosing from which account will pay for the transaction. Depending on the current gas price, expect that this contract to cost approximately 0.5 ether.
 
 You can take a look to see if your transaction is on the list of pending transactions waiting to be picked up:
 
-    eth.pendingTransactions()
+    eth.getPendingTransactions()
 
 Wait a minute for your transaction to be picked up and then type:
 
@@ -101,6 +131,14 @@ Alternatively, those two lines could be written together in a single call:
 
     greeterInstance = eth.contract(greeterCompiled.greeter.info.abiDefinition).at(greeterAddress)
 
+**Tip:** The code above only work if you compiled the greeter yourself right now. If you want to send a single command to instantiate the greeter you can use the command below:
+
+    greeterInstance = eth.contract([{constant:false,inputs:[],name:'kill',outputs:[],type:'function'},{constant:false,inputs:[{name:'input',type:'bytes32'}],name:'greet',outputs:[{name:'',type:'bytes32'}],type:'function'},{inputs:[],type:'constructor'} ]).at(greeterAddress);
+
+Replace _greeterAddress_ with your contract's address.
+
+
+### Run the Greeter
 
 Your instance is ready. In order to call it, just type the following command in your terminal:
 
@@ -111,32 +149,64 @@ If your greeter returned “Hello World” then congratulations, you just create
     greeterInstance.greet.call("hi");
 
 
+
+### Watching for answers
+
+**THIS CODE IS NOT WORKING YET** 
+
+    var event = greeterInstance.answer(null, greeterAddress);
+
+    // watch for changes
+    event.watch(function(error, result){
+      if (!error)
+        console.log(result.args.answer);
+        console.log("\n-----------\n args : ");
+        for(var key in result.args) {
+            console.log("   " + key + " : " + result[key]) ;
+        }
+        for(var key in result) {
+            console.log(key + " : " + result[key]) ;
+        }
+    });
+
+    event.stopWatching()
+
+    // Or pass a callback to start watching immediately
+    var event = greeterInstance.answer({}, greeterAddress, function(error, result){
+      if (!error)
+        console.log(result);
+    });
+
+
 ### Cleaning up after yourself: 
 
-You must be very excited to have your first contract live, but this excitement wears off sometimes, when the owners go on to write further contracts, leading to the unpleasant sight of abandoned contracts on the blockchain. In the future, blockchain rent might be implemented in order to increase the scalability of the blockchain but for now, be a good citizen and humanely put down your abandoned bots. The suicide is subsidized by the contract creation so it will cost much less than a usual transaction.
+You must be very excited to have your first contract live, but this excitement wears off sometimes, when the owners go on to write further contracts, leading to the unpleasant sight of abandoned contracts on the blockchain. In the future, blockchain rent might be implemented in order to increase the scalability of the blockchain but for now, be a good citizen and humanely put down your abandoned bots. 
+
+The suicide is subsidized by the contract creation so it will cost much less than a usual transaction.
 
     greeterInstance.kill.sendTransaction({from:eth.accounts[0], gasPrice: web3.toWei(0.001, "finney")})
 
-Notice that every contract has to implement it's own kill clause. In this particular case only the account that created the contract can kill it. If you don't add any kill clause it could potentially live forever (or at least until the frontier contracts are all wiped) independently of you and any earthly borders, so before you put it live check what your local laws say about it, including any possible limitation on technology export, restrictions on speech and maybe future legislation on civil rights of sentient digital beings.
+Notice that every contract has to implement it's own kill clause. In this particular case only the account that created the contract can kill it. 
+
+If you don't add any kill clause it could potentially live forever (or at least until the frontier contracts are all wiped) independently of you and any earthly borders, so before you put it live check what your local laws say about it, including any possible limitation on technology export, restrictions on speech and maybe future legislation on civil rights of sentient digital beings.
 
 
-**Try it yourself:  You can experiment changing its parameters to make it smarter. Challenge yourself to have it charge ether for its profound advice by adding the following function on the "greet". Here's a simple example on how to make the greeter into a joker by making it sell jokes\*:**
+## Make it better: the Joker
+
+You can experiment changing its parameters to make it smarter. Challenge yourself to have it charge ether for its profound advice by adding the following function on the "greet". Here's a simple example on how to make the greeter into a joker by making it sell jokes\*:
 
 
     if (input=="Who's there?") { 
     /* insert a joke here */
     } else if (msg.value > 1000) { 
     /* a trillionth of an ether. It's a cheap joke. */
-    return "Knock knock!"; 
+    answer("Knock knock!");  
     }
 
 Any balance your greeter is able to make will be forwarded to you on the kill call. 
 
 _\* Actually the blockchain is open source and anyone could read your joke for free, but has anyone ever laughed by reading source code?_
 
-*Test it with others: anyone else running the geth console can interact with your contract by first instantiating it using this line of code:*
-
-    greeterInstance = eth.contract([{constant:false,inputs:[],name:'kill',outputs:[],type:'function'},{constant:false,inputs:[{name:'input',type:'bytes32'}],name:'greet',outputs:[{name:'',type:'bytes32'}],type:'function'},{inputs:[],type:'constructor'} ]).at(greeterAddress);
 
 
 ### Easier addresses: the Name Registrar
@@ -147,7 +217,7 @@ Names have to use only alphanumeric characters and, cannot contain blank spaces.
 
 First, select your name:
 
-    var myName = "bob"
+    var myName = "alice"
 
 Then, check the availability of your name:
 
@@ -165,12 +235,12 @@ Wait for the previous transaction to be picked up. Wait up to thirty seconds and
 
     registrar.setAddress.sendTransaction(myName, eth.accounts[1], true,{from: eth.accounts[0]});
 
+_You can replace **eth.accounts[1]** for **greeterAddress** or any other address you want Bob to be._
 
 You can send a transaction to anyone by name instead of account simply by typing 
 
-    eth.sendTransaction({from: eth.accounts[0], to: registrar.addr("bob"), value: web3.toWei(1, "ether")})
+    eth.sendTransaction({from: eth.accounts[0], to: registrar.addr("alice"), value: web3.toWei(1, "ether")})
 
-
-**Tip: don't mistake registrar.addr for registrar.owner. The first is to which address that name is pointed at: anyone can point a name to anywhere else, just like anyone can forward a link to google.com, but only the owner of the name can change and update the link. You can set both to be the same address.**
+**Tip: don't mix registrar.addr for registrar.owner. The first is to which address that name is pointed at: anyone can point a name to anywhere else, just like anyone can forward a link to google.com, but only the owner of the name can change and update the link. You can set both to be the same address.**
 
 
