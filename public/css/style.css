@@ -398,14 +398,6 @@ h3 strong {
 	margin-right: 10px;
 }
 
-.inner-tutorial ul,
-.inner-tutorial .recipe {
-	float: none;
-	margin: 50px auto;
-	padding-top: 20px;
-	position: relative;
-}
-
 .inner-tutorial h4  {
 	color: #682615;
 }
@@ -928,17 +920,25 @@ figure.ethereum-logo {
 
 .main-tutorial code {
 	display: block;
-	background: #FFF;
-	font-family: 'Roboto Mono', "Source Code pro", "Courier New", monospace;
+	font-family: "Source Code pro", "Courier New", monospace;
 	white-space: pre;
 	font-size: 14px;
 	font-weight: 600;
 	padding: 20px;
-	margin: 30px -16px;
-	border: solid 4px #FCF5E3;
 	overflow: auto;
+	width: 10000px;
+	background: #FFF;	
 }
 
+.main-tutorial code:after {
+	content: " ";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100px;
+	background: linear-gradient(to right, transparent, #fff);
+}
 
 code {
 	background: #F6E6CC;
@@ -946,7 +946,11 @@ code {
 
 pre {
 	background: transparent;
-	border: none;
+	overflow: hidden;
+	border: solid 4px #FCF5E3;
+	padding:0;
+	margin: 20px 0;
+	position: relative;
 }
 /*footer {
 	background: #E4D0B7 url("../images/bg-footer.png");
@@ -1149,10 +1153,9 @@ footer {
 		text-align: center;
 	}
 
-	.row .recipe {
+	.row .recipe , code {
 		text-align: left;
 	}
-
 
 	figure {
 		height: 300px;

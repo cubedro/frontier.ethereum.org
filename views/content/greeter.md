@@ -58,14 +58,22 @@ The Greeter is an intelligent digital entity that lives on the blockchain and is
 
     contract greeter is mortal {
         /* Define Answer */
-        event answer(bytes32 answer);
+        event Answer(string answer);
+        string message;
 
         /* main function */
-        function greet(bytes32 input) returns (bytes32) {
-            if (input == "") answer("Hello, World") ; 
-            else answer(input); 
+        function greet(string input) constant returns (string) {
+            return input;
+        }
+
+
+        /* main function */
+        function talk(string question)  {
+            Answer(message);
+            message = question;
         }
     }
+
 
 You'll notice that there are three different contracts in this code, _"owned"_, _"mortal"_ and _"greeter"_, and each of them mention the previous one. This is because in Solidity has *inheritance*, meaning that one contract can inherit charateristics of another. This is very useful to simplify coding because some common traits of contracts don't need to be rewritten every time, and all contracts can be written in smaller, more readable chunks.
 
@@ -95,7 +103,11 @@ Once you successfully executed the above, compile it and publish to the network 
 
     var greeterCompiled = eth.compile.solidity(greeterSource)
  
-    var greeterAddress = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(1, "microether")}); 
+    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(1, "microether")}); 
+    
+    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0]}); 
+
+    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000}); 
 
 The code above compiles the code and publishes it to the network. You are paying gas and 
 
@@ -107,7 +119,16 @@ You can take a look to see if your transaction is on the list of pending transac
 
 Wait a minute for your transaction to be picked up and then type:
 
+    greeterAddress = eth.getTransactionReceipt(greeterTx).contractAddress
     eth.getCode(greeterAddress)
+
+
+    eth.getCode(eth.getTransactionReceipt(greeterTx).contractAddress)
+
+    eth.getTransaction(greeterTx)
+    eth.getTransactionReceipt(greeterTx)
+    eth.getTransactionReceipt(greeterTx).contractAddress
+    eth.getBlock("pending", true).transactions
 
 This should return the code of your contract. If it returns “0x”, it means that your transaction has not been picked up yet. Wait a little bit more. If it still hasn't, check if you are connected to the network
 
@@ -142,7 +163,7 @@ Replace _greeterAddress_ with your contract's address.
 
 Your instance is ready. In order to call it, just type the following command in your terminal:
 
-    greeterInstance.greet.call("");
+    greeterInstance.greet();
 
 If your greeter returned “Hello World” then congratulations, you just created your first digital conversationalist bot!  Try again with: 
 
@@ -154,19 +175,14 @@ If your greeter returned “Hello World” then congratulations, you just create
 
 **THIS CODE IS NOT WORKING YET** 
 
-    var event = greeterInstance.answer(null, greeterAddress);
+    var event = greeterInstance.Answer();
 
     // watch for changes
     event.watch(function(error, result){
       if (!error)
         console.log(result.args.answer);
-        console.log("\n-----------\n args : ");
-        for(var key in result.args) {
-            console.log("   " + key + " : " + result[key]) ;
-        }
-        for(var key in result) {
-            console.log(key + " : " + result[key]) ;
-        }
+        
+        console.log(JSON.stringify(result, null, 2))
     });
 
     event.stopWatching()
@@ -185,6 +201,10 @@ You must be very excited to have your first contract live, but this excitement w
 The suicide is subsidized by the contract creation so it will cost much less than a usual transaction.
 
     greeterInstance.kill.sendTransaction({from:eth.accounts[0], gasPrice: web3.toWei(0.001, "finney")})
+
+You can verify that the deed is done simply seeing if this returns 0:
+
+    eth.getCode(greeterAddress)
 
 Notice that every contract has to implement it's own kill clause. In this particular case only the account that created the contract can kill it. 
 

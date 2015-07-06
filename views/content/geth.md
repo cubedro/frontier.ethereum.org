@@ -87,13 +87,18 @@ In order to do most actions in Ethereum you need ether, and to get it, you will 
 
 
  
-    admin.newAccount()
+    var passphrase = "Write here a good, randomly generated, passphrase!"
+    personal.newAccount(passphrase)
  
 
 
-**You’ll be asked for a passphrase. If you lose the passphrase you use to encrypt your account, you will not be able to access that account. Repeat: It is NOT possible to access your account without a passphrase and there is no forgot my password option here.**
+**Pick up a good passphrase and write it down. If you lose the passphrase you use to encrypt your account, you will not be able to access that account. Repeat: It is NOT possible to access your account without a passphrase and there is no forgot my password option here.**
 
 **DO NOT FORGET YOUR PASSPHRASE. **
+
+*tip: you can create short but random passphrases by using this simple command:
+
+    var passphrase = (Math.random()*1000000000).toString(36)
 
 Tip: Typing “admin” by itself will bring up a list of sub commands used to administer your geth installation.
 

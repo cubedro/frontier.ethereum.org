@@ -11,9 +11,9 @@ You could create your own token on a different blockchain, but creating on ether
 
 This is the code for the contract we're building:
  
-
     contract token { 
         mapping (address => uint) public coinBalanceOf;
+        event CoinTransfer(address sender, address receiver, uint amount);
       
       /* Initializes contract with 10 000 tokens to the creator of the contract */
       function token() {
@@ -25,9 +25,9 @@ This is the code for the contract we're building:
             if (coinBalanceOf[msg.sender] < amount) return false;
             coinBalanceOf[msg.sender] -= amount;
             coinBalanceOf[receiver] += amount;
+            CoinTransfer(msg.sender, receiver, amount);
             return true;
         }
-
     }
 
 
@@ -39,30 +39,40 @@ In this example we declared the variable "coinBalanceOf" to be public, this will
 
 **So let's run it!**
 
-    var tokenSource = 'contract token { mapping (address => uint) public coinBalanceOf; /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { coinBalanceOf[msg.sender] = 10000; } /* Very simple trade function */ function sendCoin(address receiver, uint amount) returns(bool sufficient) { if (coinBalanceOf[msg.sender] < amount) return false; coinBalanceOf[msg.sender] -= amount; coinBalanceOf[receiver] += amount; return true; } }'
+    var tokenSource = 'contract token { mapping (address => uint) public coinBalanceOf; event CoinTransfer(address sender, address receiver, uint amount); /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { coinBalanceOf[msg.sender] = 10000; } /* Very simple trade function */ function sendCoin(address receiver, uint amount) returns(bool sufficient) { if (coinBalanceOf[msg.sender] < amount) return false; coinBalanceOf[msg.sender] -= amount; coinBalanceOf[receiver] += amount; CoinTransfer(msg.sender, receiver, amount); return true; } }'
 
 Now let’s set up the contract, just like we did in the previous section..
 
     var tokenCompiled = eth.compile.solidity(tokenSource)
-    var tokenAddress = eth.sendTransaction({data: tokenCompiled.token.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")}); 
+    var tokenTx = eth.sendTransaction({data: tokenCompiled.token.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")}); 
 
 Wait minute until and use the code below to test if your code has been deployed.
 
-    eth.pendingTransactions();
-
+    tokenAddress = eth.getTransactionReceipt(tokenTx).contractAddress
     eth.getCode(tokenAddress)
+
 
 And then 
 
     tokenInstance = eth.contract(tokenCompiled.token.info.abiDefinition).at(tokenAddress)
 
-### Check balance and send coins
+
+### Check balance watching coin transfers
 
 If everything worked correctly, you should be able to check your own balance with:
 
-    tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of tokens"
+    tokenInstance.coinBalanceOf.call(eth.accounts[0]) + " tokens"
 
 It should have all the 10 000 tokens that were created once the contract was published. Since there is not any other defined way for new coins to be issued, those are all that will ever exist. 
+
+You can set up a **Watcher** to keep a look whenever anyone sends a coin using your contract. Here's how you do it:
+
+    var event = tokenInstance.CoinTransfer({}, tokenAddress, function(error, result){
+      if (!error)
+        console.log("Coin transfer: " + result.args.amount + " tokens were sent. Balances now are as following: \n Sender:\t" + result.args.sender + " \t" + tokenInstance.coinBalanceOf.call(result.args.sender) + " tokens \n Receiver:\t" + result.args.receiver + " \t" + tokenInstance.coinBalanceOf.call(result.args.receiver) + " tokens" )
+    });
+
+### Sending coins
 
 Now of course those tokens aren't very useful if you hoard them all, so in order to send them to someone else, use this command:
 
@@ -78,6 +88,7 @@ The reason that the first command was .call() and the second is a .sendTransacti
     tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of tokens"
     tokenInstance.coinBalanceOf.call(eth.accounts[1])/100 + "% of tokens"
     tokenInstance.coinBalanceOf.call(registrar.addr("Alice"))/100 + "% of tokens"
+
 
 ### Improvement suggestions
 
@@ -100,7 +111,7 @@ The commands mentioned only work because you have tokenInstance instantiated on 
 
 There are two ways. Let's start with the quick and dirty, providing your friends with a reference to your contract’s ABI:
 
-    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' } ] ).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
+    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' }, { anonymous: false, inputs: [{ indexed: false, name: 'sender', type: 'address' }, { indexed: false, name: 'receiver', type: 'address' }, { indexed: false, name: 'amount', type: 'uint256' } ], name: 'CoinTransfer', type: 'event' } ] ).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
 
 Just replace the address at the end for your own token address, then anyone that uses this snippet will immediately be able to use your contract. Of course this will work only for this specific contract so let's analyze step by step and see how to improve this code so you'll be able to use it anywhere.
 
@@ -119,7 +130,7 @@ Wait a little bit for that transaction to be picked up too and test it:
 
 This should now return your token address, meaning that now the previous code to instantiate could use a name instead of an address.
 
-    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' } ] ).at(registrar.addr("MyFirstCoin"))
+    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' }, { anonymous: false, inputs: [{ indexed: false, name: 'sender', type: 'address' }, { indexed: false, name: 'receiver', type: 'address' }, { indexed: false, name: 'amount', type: 'uint256' } ], name: 'CoinTransfer', type: 'event' } ] ).at(registrar.addr("MyFirstCoin"))
 
 This also means that the owner of the coin can update the coin by pointing the registrar to the new contract. This would, of course, require the coin holders trust the owner set at  registrar.owner("MyFirstCoin")
 

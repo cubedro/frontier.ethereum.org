@@ -25,6 +25,8 @@ The way this particular crowdsale contract works is that you set an exchange rat
         uint public price;
         token public tokenReward;   
         mapping (uint => Funder) public funders;
+        event ReceivedFunds(address backer, uint amount);
+        event FundsTransfered(address beneficiary, uint amount);
         
         /* data structure to hold information about campaign contributors */
         struct Funder {
@@ -34,71 +36,71 @@ The way this particular crowdsale contract works is that you set an exchange rat
         
         /*  at initialization, setup the owner */
         function CrowdSale() {
-        admin = msg.sender;
+          admin = msg.sender;
         }   
         
-        function setup(address _beneficiary, uint _fundingGoal, uint _duration, uint _price, address _reward) returns (bytes32 response){
+        function setup(address _beneficiary, uint _fundingGoal, uint _duration, uint _price, address _reward) returns (bool response){
             if (msg.sender == admin && !(beneficiary > 0 && fundingGoal > 0 && deadline > 0)) {
                 beneficiary = _beneficiary;
                 fundingGoal = _fundingGoal;
                 deadline = now + _duration * 1 minutes;
                 price = _price;
                 tokenReward = token(_reward);
-                
-                return "campaign is set";
-            } else if (msg.sender != admin) {
-                return "not authorized";
+                return true;
             } else  {
-                return "campaign cannot be changed";
+                return false;
             }
         }
         
         /* The function without name is the default function that is called whenever anyone sends funds to a contract */
-        function () returns (bytes32 response) {
+        function () {
             Funder f = funders[numFunders++];
             f.addr = msg.sender;
             f.amount = msg.value;
             amountRaised += f.amount;
             tokenReward.sendCoin(msg.sender, f.amount/price);
-            
-            return "thanks for your contribution";
+            ReceivedFunds(f.addr, f.amount);
         }
             
         /* checks if the goal or time limit has been reached and ends the campaign */
-        function checkGoalReached() returns (bytes32 response) {
+        function checkGoalReached() returns (bool response) {
             if (amountRaised >= fundingGoal){
                 uint i = 0; 
                 beneficiary.send(amountRaised);
+                FundsTransfered(beneficiary, amountRaised);
              suicide(beneficiary);
-             return "Goal Reached!"; 
+             return true; 
             }
             else if (deadline <= block.number){
                 uint j = 0;
                 uint n = numFunders;
                 while (j <= n){
+                    FundsTransfered(funders[j].addr, funders[j].amount);
                     funders[j].addr.send(funders[j].amount);
                     funders[j].addr = 0;
                     funders[j].amount = 0;
                     j++;
                 }
             suicide(beneficiary);
-                return "Deadline passed";
+                return false;
             }
-            return "Not reached yet";
+            return false;
         }
     }
 
-You know the drill. Remove line breaks and copy the following commands on the terminal:
+You know the drill. [Remove line breaks](http://www.textfixer.com/tools/remove-line-breaks.php) and copy the following commands on the terminal:
 
 
-    var crowdsaleSource = 'contract token { mapping (address => uint) public coinBalanceOf; function token() {} function sendCoin(address receiver, uint amount) returns(bool sufficient) { } } contract CrowdSale { address public admin; address public beneficiary; uint public fundingGoal; uint public numFunders; uint public amountRaised; uint public deadline; uint public price; token public tokenReward; mapping (uint => Funder) public funders; /* data structure to hold information about campaign contributors */ struct Funder { address addr; uint amount; } /* at initialization, setup the owner */ function CrowdSale() { admin = msg.sender; } function setup(address _beneficiary, uint _fundingGoal, uint _duration, uint _price, address _reward) returns (bytes32 response){ if (msg.sender == admin && !(beneficiary > 0 && fundingGoal > 0 && deadline > 0)) { beneficiary = _beneficiary; fundingGoal = _fundingGoal; deadline = now + _duration * 1 minutes; price = _price; tokenReward = token(_reward); return "campaign is set"; } else if (msg.sender != admin) { return "not authorized"; } else { return "campaign cannot be changed"; } } /* The function without name is the default function that is called whenever anyone sends funds to a contract */ function () returns (bytes32 response) { Funder f = funders[numFunders++]; f.addr = msg.sender; f.amount = msg.value; amountRaised += f.amount; tokenReward.sendCoin(msg.sender, f.amount/price); return "thanks for your contribution"; } /* checks if the goal or time limit has been reached and ends the campaign */ function checkGoalReached() returns (bytes32 response) { if (amountRaised >= fundingGoal){ uint i = 0; beneficiary.send(amountRaised); suicide(beneficiary); return "Goal Reached!"; } else if (deadline <= block.number){ uint j = 0; uint n = numFunders; while (j <= n){ funders[j].addr.send(funders[j].amount); funders[j].addr = 0; funders[j].amount = 0; j++; } suicide(beneficiary); return "Deadline passed"; } return "Not reached yet"; } }'
+    var crowdsaleSource = 'contract token { mapping (address => uint) public coinBalanceOf; function token() {} function sendCoin(address receiver, uint amount) returns(bool sufficient) { } } contract CrowdSale { address public admin; address public beneficiary; uint public fundingGoal; uint public numFunders; uint public amountRaised; uint public deadline; uint public price; token public tokenReward; mapping (uint => Funder) public funders; event ReceivedFunds(address backer, uint amount); event FundsTransfered(address beneficiary, uint amount); /* data structure to hold information about campaign contributors */ struct Funder { address addr; uint amount; } /* at initialization, setup the owner */ function CrowdSale() { admin = msg.sender; } function setup(address _beneficiary, uint _fundingGoal, uint _duration, uint _price, address _reward) returns (bool response){ if (msg.sender == admin && !(beneficiary > 0 && fundingGoal > 0 && deadline > 0)) { beneficiary = _beneficiary; fundingGoal = _fundingGoal; deadline = now + _duration * 1 minutes; price = _price; tokenReward = token(_reward); return true; } else { return false; } } /* The function without name is the default function that is called whenever anyone sends funds to a contract */ function () { Funder f = funders[numFunders++]; f.addr = msg.sender; f.amount = msg.value; amountRaised += f.amount; tokenReward.sendCoin(msg.sender, f.amount/price); ReceivedFunds(f.addr, f.amount); } /* checks if the goal or time limit has been reached and ends the campaign */ function checkGoalReached() returns (bool response) { if (amountRaised >= fundingGoal){ uint i = 0; beneficiary.send(amountRaised); FundsTransfered(beneficiary, amountRaised); suicide(beneficiary); return true; } else if (deadline <= block.number){ uint j = 0; uint n = numFunders; while (j <= n){ FundsTransfered(funders[j].addr, funders[j].amount); funders[j].addr.send(funders[j].amount); funders[j].addr = 0; funders[j].amount = 0; j++; } suicide(beneficiary); return false; } return false; } }'
 
     var crowdsaleCompiled = eth.compile.solidity(crowdsaleSource);
-    var crowdsaleAddress = eth.sendTransaction({data: crowdsaleCompiled.CrowdSale.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001,"finney")}); 
+    var crowdsaleTx = eth.sendTransaction({data: crowdsaleCompiled.CrowdSale.code, from: eth.accounts[0], gas:2000000, gasPrice: web3.toWei(0.001,"finney")}); 
+
+    var crowdsaleTx = eth.sendTransaction({data: crowdsaleCompiled.token.code, from: eth.accounts[0], gas:2000000}); 
 
 Wait minute until and use the code below to test if your code has been deployed.
 
-    eth.pendingTransactions();
+    crowdsaleAddress = eth.getTransactionReceipt(crowdsaleTx).contractAddress
     eth.getCode(crowdsaleAddress)
 
 
@@ -106,6 +108,20 @@ If it has, then do these commands to instantiate it locally.
 
 
     crowdsaleInstance = web3.eth.contract(crowdsaleCompiled.CrowdSale.info.abiDefinition).at(crowdsaleAddress)
+
+### Put some watchers on
+
+
+    var event = crowdsaleInstance.ReceivedFunds({}, crowdsaleAddress, function(error, result){
+      if (!error)
+        console.log("New backer! Received " + web3.fromWei(result.args.amount, "ether") + " ether from " + result.args.backer  )
+        console.log( "\n The current funding at " +( 100 *  crowdsaleInstance.amountRaised.call() / crowdsaleInstance.fundingGoal.call()) + "% of its goals. Currently, " + crowdsaleInstance.numFunders.call() + " funders have contributed a total of " + web3.fromWei(crowdsaleInstance.amountRaised.call(), "ether") + " ether. The deadline is at " + Date(crowdsaleInstance.deadline.call()))
+    });
+
+    var eventTransfer = crowdsaleInstance.FundsTransfered({}, '', function(error, result){
+      if (!error)
+        console.log("Funds transferred from crowdsale account: " + web3.fromWei(result.args.amount, "ether") + " ether to " + result.args.beneficiary  )
+    });
 
 
 ### Set Up the crowdsale
@@ -122,7 +138,9 @@ On Beneficiary put the new address that will receive the raised funds. The fundi
 
 In this example you are sending to the crowdsale fund 50% of all the tokens that ever existed, in exchange for 100 ether. Decide those parameters very carefully as they will play a very important role on the next part of our guide.
 
-    crowdsaleInstance.setup.sendTransaction(beneficiary, fundingGoal, duration, price, reward, {from: eth.accounts[0], gas: 150000, gasPrice:web3.toWei(0.001, "finney")});
+    var tx = crowdsaleInstance.setup.sendTransaction(beneficiary, fundingGoal, duration, price, reward, {from: eth.accounts[0], gas: 1000000, gasPrice:web3.toWei(0.001, "finney")});
+
+    eth.getTransactionReceipt(tx)
 
 Dont forget to fund your newly created contract with the necessary tokens so it can pay back the contributors!
 
@@ -130,7 +148,7 @@ Dont forget to fund your newly created contract with the necessary tokens so it 
 
 After the transaction is picked, you can check the amount of tokens the crowdsale address has, and all other variables this way:
 
-    "Current crowdsale must raise " + web3.fromWei(crowdsaleInstance.fundingGoal.call(), "ether") + " ether before " + Date(crowdsaleInstance.deadline.call())  + " in order to send it to " + crowdsaleInstance.beneficiary.call() + ". It currently holds " + tokenInstance.coinBalanceOf.call(crowdsaleAddress) + " reward tokens and " + web3.fromWei(crowdsaleInstance.amountRaised.call(), "ether") + " ether"
+    "Current crowdsale must raise " + web3.fromWei(crowdsaleInstance.fundingGoal.call(), "ether") + " ether before " + Date(crowdsaleInstance.deadline.call())  + " in order to send it to " + crowdsaleInstance.beneficiary.call() + "."
 
 
 ### Register the contract
@@ -186,6 +204,7 @@ Once the deadline is passed someone has to wake up the contract to have the fund
 You can check your accounts with these lines of code:
 
     web3.fromWei(eth.getBalance(eth.accounts[0]), "ether") + " ether"
+    web3.fromWei(eth.getBalance(eth.accounts[1]), "ether") + " ether"
     tokenInstance.coinBalanceOf.call(eth.accounts[0]) + " tokens"
 
 The crowdsale instance is setup to self destruct once it has done its job, so if the deadline is over and everyone got their prizes the contract is no more, as you can see by running this:
