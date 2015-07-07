@@ -634,9 +634,7 @@ a.button:hover {
 	background-repeat: no-repeat;
 }
 
-.press li span.press-fast-company {
-	background-image: url("../images/icons/fast-company.png");
-}
+
 
 .press > a {
 	text-align: center;
@@ -652,6 +650,13 @@ a.button:hover {
 	background: #501A04;
 }
 
+.press li span.press-recode {
+	background-image: url("../images/icons/recode_large@2x.png");
+}
+
+.press li span.press-fast-company {
+	background-image: url("../images/icons/fast-company.png");
+}
 .press li span.press-reason {
 	background-image: url("../images/icons/reason.png");
 }
