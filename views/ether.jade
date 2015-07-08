@@ -1,8 +1,8 @@
 extends layout
 
 block content
+  include mixins/recipes.jade
   include warning.jade
-
 
   div#tutorial-start.main-tutorial.inner-tutorial.even
     div.container
@@ -33,43 +33,8 @@ block content
         div.col-md-12
           include:md content/ether.md        
 
-
   div.main-tutorial.hidden.even
     div.container   
       div.row
         div.col-md-12.tutorial
-            figure.greeter.scrollme
-              div.greeter-human.animateme(data-when="enter", data-from="0.4", data-to="0", data-opacity="0", data-translatex="-200")
-              div.greeter-robot.animateme(data-when="enter", data-from="0.5", data-to="0.2", data-opacity="0", data-translatex="200")
-              div.greeter-question.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0")
-              div.greeter-answer.animateme(data-when="enter", data-from="0.9", data-to="0.6", data-opacity="0")
-
-            h2 What's next?
-            h3 
-             div.number 3 
-             | Create the Greeter, your first live contract
-
-            p The greeter is a very simple contract that greets “Hello” when you poke it. It includes a very simple upgrade that turns it into a contract that will charge for telling jokes.
-
-
-            a(href="greeter/").button Summon the Greeter 
-
-            div.recipe
-              h4 You'll need:
-              ul
-                li 
-                  input(type="checkbox") 
-                  a(href="geth") Geth 
-                li 
-                  input(type="checkbox") 
-                  |  Desire to learn new things  
-                li 
-                  input(type="checkbox") 
-                  |  0.001 ether (approximatelly)
-                li 
-                  input(type="checkbox") 
-                  |  1 "knock knock" joke (optional)
-
-
-
-          
+            +greeterRecipe("What's next?")

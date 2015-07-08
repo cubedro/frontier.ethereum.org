@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  include mixins/recipes.jade
   include warning.jade
 
   div#tutorial-start.main-tutorial.hidden.inner-tutorial.even
@@ -31,43 +32,8 @@ block content
         div.col-md-12
           include:md content/greeter.md        
 
-
   div.main-tutorial.hidden.even
     div.container   
       div.row
         div.col-md-12.tutorial
-          figure.coin.scrollme
-            div.coin-connection.animateme(data-when="enter", data-from="1", data-to="0.5", data-opacity="0", data-translatey="0")
-            div.coin-send.animateme(data-when="enter", data-from="0.9", data-to="0.8", data-opacity="0", data-translatey="-50", data-translatex="-200")
-            div.coin-users.animateme(data-when="enter", data-from="0.5", data-to="0", data-opacity="0", data-translatey="-100", data-scale="1.5", data-rotate="45")
-            div.coin-coins.animateme(data-when="enter", data-from="0.6", data-to="0.4", data-opacity="0", data-scale="0.5", data-translatey="-10")
-            
-          h2 What's next?
-          
-          h3 
-           div.number 4
-           | Design and issue your own cryptocurrency
-
-          p Create a tradeable digital token that can be used as a currency, a representation of an asset, a virtual share, proof of membership or anything you want. These tokens use a standard coin api, so it will be automatically compatible with any wallet, contract or exchange that also uses the same standard. The total amount of tokens in circulation can be controlled by anything you can program into it, or simply set to a fixed constant amount.
-
-          a(href="../token").button Issue your token 
-
-          div.recipe
-            h4 You'll need:
-            ul
-              li 
-                input(type="checkbox") 
-                a(href="../geth") Geth 
-              li 
-                input(type="checkbox") 
-                |  Very basic programming skills 
-              li 
-                input(type="checkbox") 
-                |  0.002 ether (approximatelly)
-              li 
-                input(type="checkbox") 
-                |  1 cool coin name (optional)
-
-
-          
-
+          +tokenRecipe("What's next?")
