@@ -1,8 +1,8 @@
 extends layout
 
 block content
+  include mixins/recipes.jade
   include warning.jade
-
 
   div#tutorial-start.main-tutorial.inner-tutorial.even
     div.container
@@ -13,10 +13,7 @@ block content
             strong » Installing Geth 
             a(href="/ether").next Next 
 
-
-          figure.geth.scrollme
-            div.geth-background.animateme(data-when="span", data-from="0.5", data-to="0", data-opacity="0", data-translatey="-100")
-            div.geth-logo.animateme(data-when="span", data-from="0.7", data-to="0.5", data-opacity="0")
+          +gethFigure(true)
 
           h2.animateme(data-when="span", data-from="0.6", data-to="0.3", data-opacity="0", data-translatey="200") Installing Geth
 
@@ -30,52 +27,8 @@ block content
         div.col-md-12
           include:md content/geth.md        
 
-
   div.main-tutorial.hidden.even
     div.container   
       div.row
         div.col-md-12.tutorial
-           
-          figure.ether.scrollme
-            div.ether-screen.animateme(data-when="span", data-from="0.6", data-to="0", data-translatey="500")
-            div.ether-pacman.animateme(data-when="span", data-from="0.6", data-to="0.5", data-opacity="0")
-            div.ether-arcade-back.animateme(data-when="span", data-from="0.6", data-to="0", data-translatey="500")
-            div.ether-coin.animateme(data-when="span", data-from="0.6", data-to="0.4", data-translatey="-300")
-            div.ether-arcade-front.animateme(data-when="span", data-from="0.6", data-to="0", data-translatey="500")
-
-          
-          h2 What's next
-          h3 
-           div.number 2 
-           | Get Ether, the crypto-fuel of the ethereum network
-
-          p Ether is the internal currency of the system. All programs running on ethereum need to pay for their time in ether, and anyone can setup a computer executing those computations to earn ether. If you donated to fund Ethereum development or if you participated on our bug bounty program, you should have a file with a claim for ether. Otherwise you can get some from a friend, by exchanging it with bitcoin or in one of the sites that give away free ether.
-
-          a(href="ether").button get Ether 
-
-          div.recipe
-            h4 You'll need:
-            ul
-              li 
-                input(type="checkbox") 
-                a(href="#install-geth") Geth 
-              li 
-                input(type="checkbox") 
-                |  One of these:
-                ul
-                  li 
-                    input(type="checkbox") 
-                    |  an active Github account, or..
-                  li 
-                    input(type="checkbox") 
-                    |  Bitcoins, or...
-                  li 
-                    input(type="checkbox") 
-                    |  computer with a good dedicated graphics card, or...
-                  li 
-                    input(type="checkbox") 
-                    em if you participated in the presale, 
-                    | the .json file you downloaded after contributing, or… 
-                  li 
-                    input(type="checkbox") 
-                    |  a friend that can give you ether 
+          +etherRecipe("What's next?")

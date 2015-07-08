@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  include mixins/recipes.jade
   include warning.jade
 
   div#tutorial-start.main-tutorial.inner-tutorial.even
@@ -13,13 +14,7 @@ block content
             a(href="/token").previous Previous 
             a(href="/dao").next Next 
           
-
-         figure.crowdsale.scrollme
-            div.crowdsale-logic.animateme(data-when="enter", data-from="0.8", data-to="0.7", data-opacity="0", data-translatey="-100", data-easing="linear")
-            div.crowdsale-robot.animateme(data-when="enter", data-from="0.5", data-to="0.3", data-opacity="0", data-translatey="-155", data-translatex="-30", data-scale="1.1", data-rotatez="90", data-easing="linear")
-            div.crowdsale-money.animateme(data-when="enter", data-from="0.8", data-to="0.6", data-opacity="0",data-translatey="-20")
-            div.crowdsale-contributions.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0", data-scale="1.4")
-            div.crowdsale-crowd.animateme(data-when="enter", data-from="0.3", data-to="0", data-opacity="0", data-translatey="-100", data-scale="1.1", data-easing="linear")
+          +crowdsaleFigure
 
           h2.animateme(data-when="span", data-from="0.6", data-to="0.3", data-opacity="0", data-translatey="200") The Crowdsale
 
@@ -33,56 +28,8 @@ block content
         div.col-md-12
           include:md content/crowdsale.md        
 
-
   div.main-tutorial.hidden.even
     div.container   
       div.row
         div.col-md-12.tutorial
-              
-          figure.dao.scrollme
-            div.dao-robot.animateme(data-when="enter", data-from="0.65", data-to="0.45", data-opacity="0", data-translatey="200", data-rotatez="-90")
-            div.dao-money.animateme(data-when="enter", data-from="0.7", data-to="0.5", data-opacity="0", data-translatey="200")
-            div.dao-arrows.animateme(data-when="enter", data-from="0.95", data-to="0.8", data-opacity="0", data-scale="1.5")
-            div.dao-crowd.animateme(data-when="enter", data-from="0.45", data-to="0", data-opacity="0", data-translatey="-250", data-translatex="10", data-rotatez="0", data-scale="1.1", data-easing="linear")
-            div.dao-ideas.animateme(data-when="enter", data-from="0.8", data-to="0.7", data-opacity="0", data-translatey="-40")
-          h2 what’s Next
-          h3 
-           div.number 6 
-           | Create a democratic autonomous organization
-
-          p Now you have an idea, the funds and a lot of backers, what’s next? You have to now to hire managers, find a trustable CFO to handle the funds, do board meetings, do a bunch of paperwork. Or you can simply leave that to an ethereum contract. It will accept proposals by any of your contributors and then put it them all to a transparent vote.
-
-          p One of the advantadges of having a robot run your organization is that it is immune to any outside influence and it’s guaranteed to execute only what it is programmed to do. Also your organization will never go offline or disappear and will always be available as long as the network exists.
-
-          a(href="dao").button Start your organization 
-
-          div.recipe
-            h4 You'll need:
-            ul
-              li 
-                input(type="checkbox") 
-                a(href="geth") Geth 
-              li 
-                input(type="checkbox") 
-                | Basic programming skills 
-              li 
-                input(type="checkbox") 
-                | 0.008 ether to create the contract 
-                          
-              li 
-                  input(type="checkbox") 
-                  | an ethereum-based 
-                  a(href="token") digital token  
-                  | (will serve as a voting right) 
-
-              li 
-                input(type="checkbox") 
-                a(href="crowdsale") Any amount of funds
-
-              li 
-                input(type="checkbox") 
-                | A bunch of ideas on where to spend your funds
-              li 
-                input(type="checkbox") 
-                | Friends to vote on these ideas (optional)
-
+          +daoRecipe("What's next?")
