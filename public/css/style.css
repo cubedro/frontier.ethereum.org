@@ -662,7 +662,9 @@ a.button:hover {
 	padding-left: 120px;
 	height: 50px;
 	width: 0;
-	background-size: 120px 50px;
+	background-size: -webkit-contain;
+	background-size: contain;
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
