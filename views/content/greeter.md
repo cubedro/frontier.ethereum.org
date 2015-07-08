@@ -59,20 +59,22 @@ The Greeter is an intelligent digital entity that lives on the blockchain and is
     contract greeter is mortal {
         /* Define Answer */
         event Answer(string answer);
-        string message;
-
-        /* main function */
-        function greet(string input) constant returns (string) {
-            return input;
+        string greeting;
+        
+        /* this runs when the contract is executed */
+        function greeter(string _greeting) {
+            greeting = _greeting;
         }
 
-
         /* main function */
-        function talk(string question)  {
-            Answer(message);
-            message = question;
+        function greet() constant returns (string) {
+            return greeting;
         }
     }
+
+
+
+  
 
 
 You'll notice that there are three different contracts in this code, _"owned"_, _"mortal"_ and _"greeter"_, and each of them mention the previous one. This is because in Solidity has *inheritance*, meaning that one contract can inherit charateristics of another. This is very useful to simplify coding because some common traits of contracts don't need to be rewritten every time, and all contracts can be written in smaller, more readable chunks.
@@ -95,7 +97,8 @@ If instead the command returns an error, then read the documentation on how to i
 
 If you have Geth Solidity Compiler installed,  you need now reformat by removing spaces so it fits into a string variable [(there are some online tools that will do this)](http://www.textfixer.com/tools/remove-line-breaks.php):
 
-    var greeterSource = 'contract owned { /* this function is executed at initialization and sets the owner of the contract */ function owned() { owner = msg.sender; } address owner; } contract mortal is owned { /* Function to recover the funds on the contract */ function kill() { if (msg.sender == owner) suicide(owner); } } contract greeter is mortal { /* Define Answer */ event answer(bytes32 answer); /* main function */ function greet(bytes32 input) returns (bytes32) { if (input == "") answer("Hello, World") ; else answer(input); } }'
+    var greeterSource = 'contract owned { /* this function is executed at initialization and sets the owner of the contract */ function owned() { owner = msg.sender; } address owner; } contract mortal is owned { /* Function to recover the funds on the contract */ function kill() { if (msg.sender == owner) suicide(owner); } } contract greeter is mortal { /* Define Answer */ event Answer(string answer); string greeting; /* this runs when the contract is executed */ function greeter(string _greeting) { greeting = _greeting; } /* main function */ function greet(string input) constant returns (string) { return input; } }'
+
 
 
 
@@ -103,6 +106,27 @@ Once you successfully executed the above, compile it and publish to the network 
 
     var greeterCompiled = eth.compile.solidity(greeterSource)
  
+
+
+
+
+    var greeterContract = web3.eth.contract(greeterCompiled.greeter.info.abiDefinition);
+
+    var greeterInstance = greeterContract.new("Hello World!",{data: greeterCompiled.greeter.code, gas: 3000000}, function(e, contract){
+       console.log(e, contract);
+       console.log("----------");
+    })
+
+       // contract instance
+       // contract === returnedContract
+
+    // returnedContract will later get the address attached to it automatically. (undefined at the beginning)
+    returnedContract.address;
+
+    // Additionally the contract will have the `transactionHash` property, which is the current transactions hash. When one want to use to check itself.
+    returnedContract.transactionHash;
+
+
     var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(1, "microether")}); 
     
     var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0]}); 

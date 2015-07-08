@@ -53,6 +53,10 @@ app.get('/foundation', function(req, res) {
 	res.render('foundation', { title: 'Ethereum Foundation' });
 });
 
+app.get('/agreement', function(req, res) {
+	res.render('agreement', { title: 'Legal agreement' });
+});
+
 
 app.get('/getBlock', function(req, res) {
 	res.json(approvedBlock);

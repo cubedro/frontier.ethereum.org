@@ -33,6 +33,7 @@ Take a moment to dream about the revolutionary possibilities this would allow, a
         event ProposalAdded(uint proposalID, address recipient, uint amount, bytes32 data, string description);
         event Voted(uint proposalID, int position, address voter);
         event ProposalTallied(uint proposalID, int result, uint quorum, bool active);
+        event LineCounter(uint line);
 
         struct Proposal {
             address recipient;
@@ -79,9 +80,12 @@ Take a moment to dream about the revolutionary possibilities this would allow, a
         }
         
         function vote(uint _proposalID, int _position) returns (uint voteID){
+            LineCounter(83);
             if (voterShare.coinBalanceOf(msg.sender)>0 && (_position >= -1 || _position <= 1 )) {
+                LineCounter(85);
                 Proposal p = proposals[_proposalID];
                 if (p.voted[msg.sender] != true) {
+                    LineCounter(88);
                     voteID = p.votes.length++;
                     Vote v = p.votes[voteID];
                     v.position = _position;
@@ -90,6 +94,7 @@ Take a moment to dream about the revolutionary possibilities this would allow, a
                     Voted(_proposalID,  _position, msg.sender);
                 }
             } else {
+                LineCounter(97);
                 return 0;
             }
         }

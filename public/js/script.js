@@ -8,10 +8,11 @@ $(document).ready(function() {
         $(".hidden").removeClass("hidden");
         $('#agreement, .cannot-continue').hide();
         localStorage.setItem("agreedUpon",true);
+        window.scrollBy(0,750);
       });    
   } else {
         $(".hidden").removeClass("hidden");
-        $('#agreement, .cannot-continue').hide();
+        $('#agreement, .cannot-continue, .short-terms').hide();
   }
 
 

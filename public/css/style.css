@@ -475,6 +475,9 @@ a.button:hover {
 }
 
 .breadcrumb {
+	display: flex;
+	align-items: center;
+	text-align: left;
 	position: fixed;
 	left: 0;
 	right: 0;
@@ -491,6 +494,20 @@ a.button:hover {
 	background-position: 10px center;
 }
 
+.breadcrumb strong {
+	flex: 1;
+}
+
+.breadcrumb a {
+	padding: 0 5px;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
+		text-transform: uppercase;
+}	
+
+.breadcrumb a.index {
+	font-family: 'Wicked-Grit', Arial, sans-serif serif;
+	}
+
 .warning a.button {
 	background-color: #FFFAEE;
 	color: #F15625;
@@ -498,13 +515,17 @@ a.button:hover {
 	float: none;
 }
 
-.cannot-continue ,
-.warning a.continue {
+.terms,
+.cannot-continue  {
 	color: #FFFAEE;
 	text-align: center;
 	font-weight: 600;
 	display: block;
 	padding-top: 60px;
+}
+
+.terms:hover {
+	color: #FFF;
 }
 
 .cannot-continue {
@@ -984,7 +1005,6 @@ footer {
 }
 
 .warning {
-	padding: 100px 0 150px;
 	background: #eb453e;
 	color: #F6E6CC;	
 	font-size: 150%;
@@ -1196,6 +1216,7 @@ footer {
 	.row img, 
 	.recipe,
 	.main-tutorial a.button ,
+	.ethereum-network,
 	.main-tutorial figure {
 		float: none;
 		margin: 30px auto;
@@ -1203,8 +1224,12 @@ footer {
 }
 
 @media only screen and (max-width: 1000px ) {
+	.geth-console,
 	.main-tutorial a.button {
 		float: none;
+	}
+	.geth-console {
+		margin: 30px auto;
 	}
 }
 
@@ -1246,29 +1271,6 @@ footer {
 	.breadcrumb {
 		background-image: url("../images/diamond-icon@2x.png");
 	}
-
-	.breadcrumb {
-		padding-right: 10px;
-		display: flex;
-	}
-
-	.breadcrumb.index {
-		align-items: center;
-	}
-
-	.breadcrumb strong {
-		flex: 1;
-	}
-
-	.breadcrumb a {
-		padding: 0 5px;
-		font-family: 'Source Sans Pro', 'Helvetica Neue', 'Helvetica', arial,  sans-serif;
-  		text-transform: uppercase;
-	}	
-
-	.breadcrumb a.index {
-		font-family: 'Wicked-Grit', Arial, sans-serif serif;
-  	}
 
 	.main-tutorial {
 		background-image: url("../images/bg@2x.png");
