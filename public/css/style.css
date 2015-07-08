@@ -475,10 +475,13 @@ a.button:hover {
 }
 
 .breadcrumb {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
 	text-align: left;
 	position: fixed;
+	z-index: 99;
 	left: 0;
 	right: 0;
 	top: 0;
@@ -495,6 +498,7 @@ a.button:hover {
 }
 
 .breadcrumb strong {
+	-webkit-flex: 1;
 	flex: 1;
 }
 
@@ -524,6 +528,13 @@ a.button:hover {
 	padding-top: 60px;
 }
 
+.warning a.back {
+	color: #FFFAEE;
+	font-size: 80%;
+	padding-top: 15px;
+}
+
+.warning a.back,
 .terms:hover {
 	color: #FFF;
 }
@@ -1009,6 +1020,8 @@ footer {
 	color: #F6E6CC;	
 	font-size: 150%;
 	font-weight: 500;
+	z-index: 100;
+	position: relative;
 }
 
 .warning h2 {

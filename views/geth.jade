@@ -4,14 +4,16 @@ block content
   include mixins/recipes.jade
   include warning.jade
 
+  div.breadcrumb.animateme(data-when="enter", data-from="1", data-to="0.8", data-opacity="0", data-translatey="-20") 
+    a(href="/").index Ethereum Frontier 
+    strong » Installing Geth 
+    a(href="/ether").next Next  
+
   div#tutorial-start.main-tutorial.inner-tutorial.even
     div.container
       div.row
         div.col-md-12.tutorial.scrollme
-          div.breadcrumb.animateme(data-when="enter", data-from="1", data-to="0.8", data-opacity="0", data-translatey="-20") 
-            a(href="/").index Ethereum Frontier 
-            strong » Installing Geth 
-            a(href="/ether").next Next 
+ 
 
           +gethFigure(true)
 
