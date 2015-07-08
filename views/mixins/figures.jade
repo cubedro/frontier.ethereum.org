@@ -1,12 +1,7 @@
 mixin gethFigure(center)
-  if center 
-    figure.geth.scrollme
-      div.geth-background.animateme(data-when="span", data-from="0.5", data-to="0", data-opacity="0", data-translatey="-100")
-      div.geth-logo.animateme(data-when="span", data-from="0.7", data-to="0.5", data-opacity="0")
-  else
-    figure.geth.scrollme
-      div.geth-background.animateme(data-when="enter", data-from="0.5", data-to="0", data-opacity="0", data-translatex="100")
-      div.geth-logo.animateme(data-when="enter", data-from="0.7", data-to="0.6", data-opacity="0")
+  figure.geth.scrollme
+    div.geth-background.animateme(data-when="enter", data-from="0.5", data-to="0", data-opacity="0", data-translatex="100")
+    div.geth-logo.animateme(data-when="enter", data-from="0.7", data-to="0.6", data-opacity="0")
 
 
 mixin etherFigure()
