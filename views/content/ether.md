@@ -10,9 +10,10 @@ Feeling comfortable? Time to get some ether!
 
 ### 1. Mining ether yourself
 
+Mining is the name of the 
+
 Since you are one of the pioneers, it might be possible to acquire ether by _mining_: contributing your computing and storage resources to the platform in exchange for transaction costs and rewards. You will be competing with other miners in the network to find blocks that fit on top of the existing chain - the state of the platform - claiming the associated prize. You can start your mining operation by opening a Geth console and typing:
 
-    miner.start() 
 
 Before you can find any blocks however, your computer needs to go through a process called “building a DAG”. This DAG (short for “Directed Acyclic Graph”) is a large data structure (~1GB) required for mining, intended to prevent ASIC machines (“Application Specific Integrated Circuits”) from being mass manufactured for mining ether. Its goal is to protect miners like yourself, so that you will only ever need your home computer to remain competitive. The DAG should take about 10 minutes to generate and as soon as it finishes, Geth will start mining automatically. If at any point you want to see what is going on, you can type:
 
@@ -78,7 +79,10 @@ Waiting a few seconds, the transaction should be complete. To check the balance 
 
     eth.getBalance(eth.accounts[0])
 
-Tip: If you want to check the balance of all your accounts at once, use this JavaScript code snippet. It will iterate over each of your accounts and print their balance in ether:
+
+### Check All Balances at once
+
+If you want to check the balance of all your accounts at once, use this JavaScript code snippet. It will iterate over each of your accounts and print their balance in ether:
  
     function checkAllBalances() { 
       var i = 0; 
@@ -93,6 +97,18 @@ Once you executed the line above, all you need to check your whole balance is:
     checkAllBalances() 
 
 *Try it yourself: tweak this JavaScript function to make it show another unit, like “finney”.*
+
+### Transaction Receipts
+
+Anytime you create a transaction in Ethereum, the string that is returned is the **Transaction Hash**. You can use those to keep track of a transaction in progress, or the amount of gas spent in a past transaction using _eth.getTransaction()_ and _eth.getTransactionReceipt_. Here's how to use it:
+
+    var tx =  eth.sendTransaction({from: eth.accounts[1], to: eth.accounts[0], value: amount});
+    eth.getTransaction(tx);
+
+And if the transaction has been picked up already, you can check it's receipt with this:
+
+    eth.getTransactionReceipt(tx);
+
 
 ## Easier addresses: the Name Registrar
 

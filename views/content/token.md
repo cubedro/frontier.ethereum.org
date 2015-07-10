@@ -15,9 +15,9 @@ This is the code for the contract we're building:
         mapping (address => uint) public coinBalanceOf;
         event CoinTransfer(address sender, address receiver, uint amount);
       
-      /* Initializes contract with 10 000 tokens to the creator of the contract */
-      function token() {
-            coinBalanceOf[msg.sender] = 10000;
+      /* Initializes contract with initial supply tokens to the creator of the contract */
+      function token(uint supply) {
+            coinBalanceOf[msg.sender] = (supply || 10000);
         }
       
       /* Very simple trade function */
@@ -30,7 +30,6 @@ This is the code for the contract we're building:
         }
     }
 
-
 If you have ever programmed, you won't find it hard to understand what it does: it is a contract that generates 10 thousand tokens to the creator of the contract, and then allows anyone with enough balance to send it to others. These tokens are the minimum tradeable unit and cannot be subdivided, but for the final users could be presented as a 100 units subdividable by 100 subunits, so owning a single token would represent having 0.01% of the total. If your application needs more fine grain atomic divisibility, then just increase the initial issuance amount.
 
 In this example we declared the variable "coinBalanceOf" to be public, this will automatically create a function that checks any accounts balance.
@@ -39,22 +38,28 @@ In this example we declared the variable "coinBalanceOf" to be public, this will
 
 **So let's run it!**
 
-    var tokenSource = 'contract token { mapping (address => uint) public coinBalanceOf; event CoinTransfer(address sender, address receiver, uint amount); /* Initializes contract with 10 000 tokens to the creator of the contract */ function token() { coinBalanceOf[msg.sender] = 10000; } /* Very simple trade function */ function sendCoin(address receiver, uint amount) returns(bool sufficient) { if (coinBalanceOf[msg.sender] < amount) return false; coinBalanceOf[msg.sender] -= amount; coinBalanceOf[receiver] += amount; CoinTransfer(msg.sender, receiver, amount); return true; } }'
-
-Now let’s set up the contract, just like we did in the previous section..
+    var tokenSource = 'contract token { mapping (address => uint) public coinBalanceOf; event CoinTransfer(address sender, address receiver, uint amount); /* Initializes contract with initial supply tokens to the creator of the contract */ function token(uint supply) { coinBalanceOf[msg.sender] = (supply || 10000); } /* Very simple trade function */ function sendCoin(address receiver, uint amount) returns(bool sufficient) { if (coinBalanceOf[msg.sender] < amount) return false; coinBalanceOf[msg.sender] -= amount; coinBalanceOf[receiver] += amount; CoinTransfer(msg.sender, receiver, amount); return true; } }'
 
     var tokenCompiled = eth.compile.solidity(tokenSource)
-    var tokenTx = eth.sendTransaction({data: tokenCompiled.token.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(0.001, "finney")}); 
 
-Wait minute until and use the code below to test if your code has been deployed.
+Now let’s set up the contract, just like we did in the previous section. Change the "initial Supply" to the amount of non divisible tokens you want to create. If you want to have divisable units, you should do that on the user frontend but keep them represented in the minimun unit of account. 
 
-    tokenAddress = eth.getTransactionReceipt(tokenTx).contractAddress
-    eth.getCode(tokenAddress)
+    var initialSupply = 10000;
+    var tokenContract = web3.eth.contract(tokenCompiled.token.info.abiDefinition);
+    var tokenInstance = tokenContract.new(
+      initialSupply,
+      {
+        from:web3.eth.accounts[0], 
+        data:tokenCompiled.token.code, 
+        gas: 1000000
+      }, function(e, contract){
+       console.log(e, contract);
+       console.log("Contract mined! \naddress: " + contract.address + "\ntransactionHash: " + contract.transactionHash);
+    })
 
+You can check wether is has been deployed by doing this:
 
-And then 
-
-    tokenInstance = eth.contract(tokenCompiled.token.info.abiDefinition).at(tokenAddress)
+    eth.getCode(tokenInstance.address)
 
 
 ### Check balance watching coin transfers
@@ -67,7 +72,7 @@ It should have all the 10 000 tokens that were created once the contract was pub
 
 You can set up a **Watcher** to keep a look whenever anyone sends a coin using your contract. Here's how you do it:
 
-    var event = tokenInstance.CoinTransfer({}, tokenAddress, function(error, result){
+    var event = tokenInstance.CoinTransfer({}, '', function(error, result){
       if (!error)
         console.log("Coin transfer: " + result.args.amount + " tokens were sent. Balances now are as following: \n Sender:\t" + result.args.sender + " \t" + tokenInstance.coinBalanceOf.call(result.args.sender) + " tokens \n Receiver:\t" + result.args.receiver + " \t" + tokenInstance.coinBalanceOf.call(result.args.receiver) + " tokens" )
     });
@@ -85,9 +90,9 @@ If a friend has registered a name on the registrar you can send it without knowi
 
 The reason that the first command was .call() and the second is a .sendTransaction() is that the former is just a read operation and the latter is using gas to change the state of the blockchain, and as such, it needs to be set who is it coming from. Now, wait a minute and check both accounts balances:
 
-    tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of tokens"
-    tokenInstance.coinBalanceOf.call(eth.accounts[1])/100 + "% of tokens"
-    tokenInstance.coinBalanceOf.call(registrar.addr("Alice"))/100 + "% of tokens"
+    tokenInstance.coinBalanceOf.call(eth.accounts[0])/100 + "% of all tokens"
+    tokenInstance.coinBalanceOf.call(eth.accounts[1])/100 + "% of all tokens"
+    tokenInstance.coinBalanceOf.call(registrar.addr("Alice"))/100 + "% of all tokens"
 
 
 ### Improvement suggestions
@@ -97,8 +102,8 @@ Right now this cryptocurrency is quite limited as there will only ever be 10,000
     mapping (uint => address) miningReward;
     function claimMiningReward() {
       if (miningReward[block.number] == 0) {
-        balances[block.coinbase] += 1;
-    miningReward[block.number] = block.coinbase;
+        coinBalanceOf[block.coinbase] += 1;
+        miningReward[block.number] = block.coinbase;
       }
     }
 
@@ -111,7 +116,7 @@ The commands mentioned only work because you have tokenInstance instantiated on 
 
 There are two ways. Let's start with the quick and dirty, providing your friends with a reference to your contract’s ABI:
 
-    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' }, { anonymous: false, inputs: [{ indexed: false, name: 'sender', type: 'address' }, { indexed: false, name: 'receiver', type: 'address' }, { indexed: false, name: 'amount', type: 'uint256' } ], name: 'CoinTransfer', type: 'event' } ] ).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
+    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendCoin',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{constant:true,inputs:[{name:'',type:'address'}],name:'coinBalanceOf',outputs:[{name:'',type:'uint256'}],type:'function'},{inputs:[{name:'supply',type:'uint256'}],type:'constructor'},{anonymous:false,inputs:[{indexed:false,name:'sender',type:'address'},{indexed:false,name:'receiver',type:'address'},{indexed:false,name:'amount',type:'uint256'}],name:'CoinTransfer',type:'event'}]).at('0x4a4ce7844735c4b6fc66392b200ab6fe007cfca8')
 
 Just replace the address at the end for your own token address, then anyone that uses this snippet will immediately be able to use your contract. Of course this will work only for this specific contract so let's analyze step by step and see how to improve this code so you'll be able to use it anywhere.
 
@@ -130,46 +135,11 @@ Wait a little bit for that transaction to be picked up too and test it:
 
 This should now return your token address, meaning that now the previous code to instantiate could use a name instead of an address.
 
-    tokenInstance = eth.contract( [{ constant: false, inputs: [{ name: 'receiver', type: 'address' }, { name: 'amount', type: 'uint256' } ], name: 'sendCoin', outputs: [{ name: 'sufficient', type: 'bool' } ], type: 'function' }, { constant: true, inputs: [{ name: '', type: 'address' } ], name: 'coinBalanceOf', outputs: [{ name: '', type: 'uint256' } ], type: 'function' }, { inputs: [ ], type: 'constructor' }, { anonymous: false, inputs: [{ indexed: false, name: 'sender', type: 'address' }, { indexed: false, name: 'receiver', type: 'address' }, { indexed: false, name: 'amount', type: 'uint256' } ], name: 'CoinTransfer', type: 'event' } ] ).at(registrar.addr("MyFirstCoin"))
+    tokenInstance = eth.contract([{constant:false,inputs:[{name:'receiver',type:'address'},{name:'amount',type:'uint256'}],name:'sendCoin',outputs:[{name:'sufficient',type:'bool'}],type:'function'},{constant:true,inputs:[{name:'',type:'address'}],name:'coinBalanceOf',outputs:[{name:'',type:'uint256'}],type:'function'},{inputs:[{name:'supply',type:'uint256'}],type:'constructor'},{anonymous:false,inputs:[{indexed:false,name:'sender',type:'address'},{indexed:false,name:'receiver',type:'address'},{indexed:false,name:'amount',type:'uint256'}],name:'CoinTransfer',type:'event'}]).at(registrar.addr("MyFirstCoin"))
 
 This also means that the owner of the coin can update the coin by pointing the registrar to the new contract. This would, of course, require the coin holders trust the owner set at  registrar.owner("MyFirstCoin")
 
-
-### Register the ABI
-
-__OPTIONAL AND NOT RECOMMENDED__ 
-
-The code is still long and not very friendly, and that's mostly because of the ABI that uses most of the contract code space. Ideally the only thing the user should need to know to access the contract would be it's name. In order to do that we have to register the abi somewhere also, which what the Contract Metadata Registry is for.
-
-To  initiate the process, execute this:
-
-    admin.contractInfo.newRegistry(eth.accounts[0])
-
-In the future Ethereum will have support for a pure hash-based content system to allow any data to be saved in the P2P network, but for now we'll have to create some files and upload them manually. First create a file on your system (e.g. in your desktop, if you're messy like me) and add its path like this:
-
-    var localFilePath = '/Users/yourusername/Desktop/abi.json'
-
-Now use this line to write to that file and save its hash:
-
-    contentHash = admin.contractInfo.register(eth.accounts[0], tokenAddress, tokenCompiled.token, localFilePath)
-
-You now have to put the .json file you just created somewhere publicly accessible. If you have an http server you can just drag into it, but you can also use a service like PasteBin or Gist. Create a new unlisted/private file, copy the content from the file you just created and save it. Then click the "raw" link and get the link like this:
-
-    var remoteFilePath = 'https://gist.githubusercontent.com/alexvandesande/ee0d34f5ac47937b6330/raw/6813c4e5eee9af33a1728565141ca4572530ffcd/abi.json'
-
-Now finally you can register the ABI with:
-
-    admin.contractInfo.registerUrl(eth.accounts[0], contentHash, remoteFilePath)
-
-Wait for the miners to pick it up and check if everything went well with:
-
-    admin.contractInfo.get(registrar.addr(tokenName)).AbiDefinition
-
-This should return the ABI. If it doesn't, then double check the process and maybe try uploading your file to a different host. Now in order to instantiate the contract in any computer all one has to know is either its address or registered name.
-
-    var tokenAddress = registrar.addr("MyFirstCoin")
-    var tokenInstance = eth.contract(admin.contractInfo.get(tokenAddress).AbiDefinition).at(tokenAddress)
-
+Of course this is a rather unpleasant big chunk of code just to allow others to interact with a contract. There are some avenues being investigated to upload the contract ABI to the network, so that all the user will need is the contract name. You can [read about these approaches](https://github.com/ethereum/go-ethereum/wiki/Contracts-and-Transactions#natspec) but they are very experimental and will certainly change in the future.
 
 ### Learn More 
 

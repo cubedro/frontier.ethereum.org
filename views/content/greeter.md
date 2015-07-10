@@ -45,24 +45,21 @@ Now that you’ve mastered the basics of Ethereum, let’s move into your first 
 The Greeter is an intelligent digital entity that lives on the blockchain and is able to have conversations with anyone who interacts with it, based on its input. It might not be a talker, but it’s a great listener. Here is it's code:
 
 
-    contract owned {
-        /* this function is executed at initialization and sets the owner of the contract */
-        function owned() { owner = msg.sender; }
+    contract mortal {
         address owner;
-    }
 
-    contract mortal is owned {
+        /* this function is executed at initialization and sets the owner of the contract */
+        function mortal() { owner = msg.sender; }
+
         /* Function to recover the funds on the contract */
         function kill() { if (msg.sender == owner) suicide(owner); }
     }
 
     contract greeter is mortal {
-        /* Define Answer */
-        event Answer(string answer);
         string greeting;
         
         /* this runs when the contract is executed */
-        function greeter(string _greeting) {
+        function greeter(string _greeting) public {
             greeting = _greeting;
         }
 
@@ -72,12 +69,7 @@ The Greeter is an intelligent digital entity that lives on the blockchain and is
         }
     }
 
-
-
-  
-
-
-You'll notice that there are three different contracts in this code, _"owned"_, _"mortal"_ and _"greeter"_, and each of them mention the previous one. This is because in Solidity has *inheritance*, meaning that one contract can inherit charateristics of another. This is very useful to simplify coding because some common traits of contracts don't need to be rewritten every time, and all contracts can be written in smaller, more readable chunks.
+You'll notice that there are two different contracts in this code: _"mortal"_ and _"greeter"_.  This is because in Solidity has *inheritance*, meaning that one contract can inherit charateristics of another. This is very useful to simplify coding because some common traits of contracts don't need to be rewritten every time, and all contracts can be written in smaller, more readable chunks. So by just declaring that _greeter is mortal_ you inherited all characteristics from the "mortal" contract and kept the greeter simple and easy to read.
 
 _"Mortal"_ and _"owned" simply means that the greeter contract can be killed by it's owner, to clean up the blockchain and recover funds locked into it. Contracts in ethereum are, by default, immortal and have no owner, meaning that once deployed the author has no special privileges anymore. Consider this before uploading.
 
@@ -93,129 +85,66 @@ If you have it installed, it should output something like this:
 
     ['Solidity' ]
 
-If instead the command returns an error, then read the documentation on how to install a compiler, use Aleth zero or use the  online solidity compiler. 
+If instead the command returns an error, then read the documentation on how to install a compiler, use Aleth zero or use the  [online solidity compiler](https://chriseth.github.io/cpp-ethereum/). 
 
 If you have Geth Solidity Compiler installed,  you need now reformat by removing spaces so it fits into a string variable [(there are some online tools that will do this)](http://www.textfixer.com/tools/remove-line-breaks.php):
 
-    var greeterSource = 'contract owned { /* this function is executed at initialization and sets the owner of the contract */ function owned() { owner = msg.sender; } address owner; } contract mortal is owned { /* Function to recover the funds on the contract */ function kill() { if (msg.sender == owner) suicide(owner); } } contract greeter is mortal { /* Define Answer */ event Answer(string answer); string greeting; /* this runs when the contract is executed */ function greeter(string _greeting) { greeting = _greeting; } /* main function */ function greet(string input) constant returns (string) { return input; } }'
+    var greeterSource = 'contract mortal { address owner; /* this function is executed at initialization and sets the owner of the contract */ function mortal() { owner = msg.sender; } /* Function to recover the funds on the contract */ function kill() { if (msg.sender == owner) suicide(owner); } } contract greeter is mortal { string greeting; /* this runs when the contract is executed */ function greeter(string _greeting) public { greeting = _greeting; } /* main function */ function greet() constant returns (string) { return greeting; } }'
 
+    var greeterCompiled = web3.eth.compile.solidity(greeterSource)
 
+You have now compiled your code. Now you need to get it ready for uploading, and it includes setting some variables up, like what is your greeting. Edit the first line below and execute these commands:
 
-
-Once you successfully executed the above, compile it and publish to the network using the following commands:
-
-    var greeterCompiled = eth.compile.solidity(greeterSource)
- 
-
-
-
-
+    var myGreeting = "Hello World!"
     var greeterContract = web3.eth.contract(greeterCompiled.greeter.info.abiDefinition);
 
-    var greeterInstance = greeterContract.new("Hello World!",{data: greeterCompiled.greeter.code, gas: 3000000}, function(e, contract){
+    var greeterInstance = greeterContract.new(myGreeting,{from:web3.eth.accounts[0], data: greeterCompiled.greeter.code, gas: 1000000}, function(e, contract){
        console.log(e, contract);
-       console.log("----------");
+       console.log("Contract mined! \naddress: " + contract.address + "\ntransactionHash: " + contract.transactionHash);
     })
 
-       // contract instance
-       // contract === returnedContract
+You will probably be asked for the password you picked in the beginning, because you need to pay for the gas costs to uploading your contract. This contract is estimated to cost 172 thousand gas to upload \(according to the [online solidity compiler](https://chriseth.github.io/cpp-ethereum/)\), at the moment of this writing gas on the test net is costing 1 to 10 microethers (nicknamed "szabo"). To know the latest price in ether all you can see the [latest gas prices at the network stats page](https://stats.ethdev.com) and multiply both terms. 
 
-    // returnedContract will later get the address attached to it automatically. (undefined at the beginning)
-    returnedContract.address;
-
-    // Additionally the contract will have the `transactionHash` property, which is the current transactions hash. When one want to use to check itself.
-    returnedContract.transactionHash;
+**Notice that that cost is not paid to the [ethereum developers](../foundation), instead it goes to the _Miners_, people who are running computers who keep the network running. Gas is set by market prices based on the current supply and demand of computation.**
 
 
-    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000, gasPrice: web3.toWei(1, "microether")}); 
-    
-    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0]}); 
+After less than a minute, the you should have a log with the contract address, this means you've sucessfully deployed it. You can verify the deployed code (compiled) by using this command:
 
-    var greeterTx = eth.sendTransaction({data: greeterCompiled.greeter.code, from: eth.accounts[0], gas:1000000}); 
+    eth.getCode(greeterInstance.contractAddress)
 
-The code above compiles the code and publishes it to the network. You are paying gas and 
-
-You will probably be asked for the password you picked in the beginning. You are choosing from which account will pay for the transaction. Depending on the current gas price, expect that this contract to cost approximately 0.5 ether.
-
-You can take a look to see if your transaction is on the list of pending transactions waiting to be picked up:
-
-    eth.getPendingTransactions()
-
-Wait a minute for your transaction to be picked up and then type:
-
-    greeterAddress = eth.getTransactionReceipt(greeterTx).contractAddress
-    eth.getCode(greeterAddress)
-
-
-    eth.getCode(eth.getTransactionReceipt(greeterTx).contractAddress)
-
-    eth.getTransaction(greeterTx)
-    eth.getTransactionReceipt(greeterTx)
-    eth.getTransactionReceipt(greeterTx).contractAddress
-    eth.getBlock("pending", true).transactions
-
-This should return the code of your contract. If it returns “0x”, it means that your transaction has not been picked up yet. Wait a little bit more. If it still hasn't, check if you are connected to the network
-
-    net.peerCount
-
-If you have more than 0 peers and it takes more than a minute or two for your transaction to be mined, your gas price might have been too low. Go back to that command above and try playing around with the gas price or gas amount. Go too up and you might reach gas limit of the block, go too low and the price might be too low, or the gas insufficient for the transaction to be picked up.
-
-After your code has been accepted, eth.getCode(codeAddress) will return a long string of numbers. If that’s the case, congratulations, your little Greeter is live! If the contract is created again (by performing another eth.sendTransaction), it will be published to a new address. 
-
-Now that your contract is live on the network, anyone can interact with it by instantiating a local copy. But in order to do that, your computer needs to know how to interact with it, which is what the Application Binary Interface (ABI) is for. To generate a contract from ABI you have to do this:
-
-    greeterContract = eth.contract(greeterCompiled.greeter.info.abiDefinition)
-
-**Tip: if the solidity compiler isn't properly installed in your machine, you can get the ABI from the online compiler . To do so, use the code below carefully replacing greeterCompiled.greeter.info.abiDefinition  with the abi from your compiler.**
-
-After having created a local copy of the object, this is how you actually instantiate that object from a live contract address:
-
-    greeterInstance = greeterContract.at(greeterAddress)
-
-Alternatively, those two lines could be written together in a single call:
-
-    greeterInstance = eth.contract(greeterCompiled.greeter.info.abiDefinition).at(greeterAddress)
-
-**Tip:** The code above only work if you compiled the greeter yourself right now. If you want to send a single command to instantiate the greeter you can use the command below:
-
-    greeterInstance = eth.contract([{constant:false,inputs:[],name:'kill',outputs:[],type:'function'},{constant:false,inputs:[{name:'input',type:'bytes32'}],name:'greet',outputs:[{name:'',type:'bytes32'}],type:'function'},{inputs:[],type:'constructor'} ]).at(greeterAddress);
-
-Replace _greeterAddress_ with your contract's address.
+If that’s the case, congratulations, your little Greeter is live! If the contract is created again (by performing another eth.sendTransaction), it will be published to a new address. 
 
 
 ### Run the Greeter
 
-Your instance is ready. In order to call it, just type the following command in your terminal:
+In order to call your bot, just type the following command in your terminal:
 
     greeterInstance.greet();
 
-If your greeter returned “Hello World” then congratulations, you just created your first digital conversationalist bot!  Try again with: 
+Since this contract changes nothing on the blockchain, then it returns instantly and without any gas cost. You should see it return:
 
-    greeterInstance.greet.call("hi");
+    'Hello World!'
+
+### Getting other people to interact with your code
+
+In order to other people to run your contract they need two things: the address where the contract is located and the ABI (Application Binary Interface) which is a sort of user manual, describing the name of its functions and how to call them. In order to get each of them run these commands.
+
+    greeterCompiled.greeter.info.abiDefinition;
+    greeterInstance.address;
+
+Then you can instantiate the contract in any machine by using a code that uses this structure, replacing the ABI and the address returned previously:
+
+    var greeterInstance = eth.contract(ABI).at(Address);
+
+This particular example can be instantiated by anyone by simply calling:
+
+    var greeterInstance2 = eth.contract([{constant:false,inputs:[],name:'kill',outputs:[],type:'function'},{constant:true,inputs:[],name:'greet',outputs:[{name:'',type:'string'}],type:'function'},{inputs:[{name:'_greeting',type:'string'}],type:'constructor'}]).at('greeterAddress');
+
+Replace _greeterAddress_ with your contract's address.
 
 
+**Tip: if the solidity compiler isn't properly installed in your machine, you can get the ABI from the online compiler . To do so, use the code below carefully replacing greeterCompiled.greeter.info.abiDefinition  with the abi from your compiler.**
 
-### Watching for answers
-
-**THIS CODE IS NOT WORKING YET** 
-
-    var event = greeterInstance.Answer();
-
-    // watch for changes
-    event.watch(function(error, result){
-      if (!error)
-        console.log(result.args.answer);
-        
-        console.log(JSON.stringify(result, null, 2))
-    });
-
-    event.stopWatching()
-
-    // Or pass a callback to start watching immediately
-    var event = greeterInstance.answer({}, greeterAddress, function(error, result){
-      if (!error)
-        console.log(result);
-    });
 
 
 ### Cleaning up after yourself: 
@@ -224,32 +153,16 @@ You must be very excited to have your first contract live, but this excitement w
 
 The suicide is subsidized by the contract creation so it will cost much less than a usual transaction.
 
-    greeterInstance.kill.sendTransaction({from:eth.accounts[0], gasPrice: web3.toWei(0.001, "finney")})
+    greeterInstance.kill.sendTransaction({from:eth.accounts[0]})
 
 You can verify that the deed is done simply seeing if this returns 0:
 
-    eth.getCode(greeterAddress)
+    eth.getCode(greeterInstance.contractAddress)
 
 Notice that every contract has to implement it's own kill clause. In this particular case only the account that created the contract can kill it. 
 
-If you don't add any kill clause it could potentially live forever (or at least until the frontier contracts are all wiped) independently of you and any earthly borders, so before you put it live check what your local laws say about it, including any possible limitation on technology export, restrictions on speech and maybe future legislation on civil rights of sentient digital beings.
+If you don't add any kill clause it could potentially live forever (or at least until the frontier contracts are all wiped) independently of you and any earthly borders, so before you put it live check what your local laws say about it, including any possible limitation on technology export, restrictions on speech and maybe any legislation on civil rights of sentient digital beings. Treat your bots humanely.
 
-
-## Make it better: the Joker
-
-You can experiment changing its parameters to make it smarter. Challenge yourself to have it charge ether for its profound advice by adding the following function on the "greet". Here's a simple example on how to make the greeter into a joker by making it sell jokes\*:
-
-
-    if (input=="Who's there?") { 
-    /* insert a joke here */
-    } else if (msg.value > 1000) { 
-    /* a trillionth of an ether. It's a cheap joke. */
-    answer("Knock knock!");  
-    }
-
-Any balance your greeter is able to make will be forwarded to you on the kill call. 
-
-_\* Actually the blockchain is open source and anyone could read your joke for free, but has anyone ever laughed by reading source code?_
 
 
 
