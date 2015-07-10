@@ -33,7 +33,7 @@ Take a moment to dream about the revolutionary possibilities this would allow, a
         event ProposalAdded(uint proposalID, address recipient, uint amount, bytes32 data, string description);
         event Voted(uint proposalID, int position, address voter);
         event ProposalTallied(uint proposalID, int result, uint quorum, bool active);
-        event LineCounter(uint line);
+        event LineCounter(uint line); /* This event should be taken out in the future */
 
         struct Proposal {
             address recipient;
@@ -131,34 +131,51 @@ So let's recap what this means: in the last two sections you created 10,000 toke
 
 So open your console and let's get ready to finally put your country online:
 
-    var daoSource = 'contract token { mapping (address => uint) public coinBalanceOf; function token() { } function sendCoin(address receiver, uint amount) returns(bool sufficient) { } } contract Democracy { uint public minimumQuorum = 10; uint public debatingPeriod = 7 minutes; token public voterShare; address public founder; Proposal[] public proposals; uint public numProposals; event ProposalAdded(uint proposalID, address recipient, uint amount, bytes32 data, string description); event Voted(uint proposalID, int position, address voter); event ProposalTallied(uint proposalID, int result, uint quorum, bool active); struct Proposal { address recipient; uint amount; bytes32 data; string description; uint creationDate; uint quorum; bool active; Vote[] votes; mapping (address => bool) voted; } struct Vote { int position; address voter; } function Democracy() { founder = msg.sender; } function setup(address _voterShareAddress){ if (msg.sender == founder && proposals.length == 0) { voterShare = token(_voterShareAddress); } } function newProposal(address _recipient, uint _amount, bytes32 _data, string _description) returns (uint proposalID) { if (voterShare.coinBalanceOf(msg.sender)>0) { proposalID = proposals.length++; Proposal p = proposals[proposalID]; p.recipient = _recipient; p.amount = _amount; p.data = _data; p.description = _description; p.creationDate = now; p.active = true; ProposalAdded(proposalID, _recipient, _amount, _data, _description); numProposals = proposalID; } else { return 0; } } function vote(uint _proposalID, int _position) returns (uint voteID){ if (voterShare.coinBalanceOf(msg.sender)>0 && (_position >= -1 || _position <= 1 )) { Proposal p = proposals[_proposalID]; if (p.voted[msg.sender] != true) { voteID = p.votes.length++; Vote v = p.votes[voteID]; v.position = _position; v.voter = msg.sender; p.voted[msg.sender] = true; Voted(_proposalID, _position, msg.sender); } } else { return 0; } } function executeProposal(uint _proposalID) returns (int result) { Proposal p = proposals[_proposalID]; /* Check if debating period is over */ if (now > (p.creationDate + debatingPeriod) && p.active){ /* tally the votes */ for (uint i = 0; i <= p.votes.length; i++) { Vote v = p.votes[i]; int voteWeight = int(voterShare.coinBalanceOf(v.voter)); p.quorum += uint(voteWeight); result += voteWeight * v.position; } /* execute result */ if (p.quorum > minimumQuorum && result > 0 ) { p.recipient.call.value(p.amount)(p.data); p.active = false; } else if (p.quorum > minimumQuorum && result < 0) { p.active = false; } } ProposalTallied(_proposalID, result, p.quorum, p.active); } } '
+    var daoCompiled = eth.compile.solidity('contract token { mapping (address => uint) public coinBalanceOf; function token() { } function sendCoin(address receiver, uint amount) returns(bool sufficient) { } } contract Democracy { uint public minimumQuorum; uint public debatingPeriod; uint public numProposals; token public voterShare; Proposal[] public proposals; event ProposalAdded(uint proposalID, address recipient, uint amount, bytes32 data, string description); event Voted(uint proposalID, int position, address voter); event ProposalTallied(uint proposalID, int result, uint quorum, bool active); event LineCounter(uint line); struct Proposal { address recipient; uint amount; bytes32 data; string description; uint creationDate; uint quorum; bool active; Vote[] votes; mapping (address => bool) voted; } struct Vote { int position; address voter; } function Democracy(address _voterShareAddress, uint _minimumQuorum, uint _debatingPeriod){ voterShare = token(_voterShareAddress); minimumQuorum = _minimumQuorum || 10; debatingPeriod = _debatingPeriod * 1 minutes || 7 days; } function newProposal(address _recipient, uint _amount, bytes32 _data, string _description) returns (uint proposalID) { if (voterShare.coinBalanceOf(msg.sender)>0) { proposalID = proposals.length++; Proposal p = proposals[proposalID]; p.recipient = _recipient; p.amount = _amount; p.data = _data; p.description = _description; p.creationDate = now; p.active = true; ProposalAdded(proposalID, _recipient, _amount, _data, _description); numProposals = proposalID+1; } else { return 0; } } function vote(uint _proposalID, int _position) returns (uint voteID){ LineCounter(83); if (voterShare.coinBalanceOf(msg.sender)>0 && (_position >= -1 || _position <= 1 )) { LineCounter(85); Proposal p = proposals[_proposalID]; if (p.voted[msg.sender] != true) { LineCounter(88); voteID = p.votes.length++; Vote v = p.votes[voteID]; v.position = _position; v.voter = msg.sender; p.voted[msg.sender] = true; Voted(_proposalID, _position, msg.sender); } } else { LineCounter(97); return 0; } } function executeProposal(uint _proposalID) returns (int result) { Proposal p = proposals[_proposalID]; /* Check if debating period is over */ if (now > (p.creationDate + debatingPeriod) && p.active){ /* tally the votes */ for (uint i = 0; i <= p.votes.length; i++) { Vote v = p.votes[i]; int voteWeight = int(voterShare.coinBalanceOf(v.voter)); p.quorum += uint(voteWeight); result += voteWeight * v.position; } /* execute result */ if (p.quorum > minimumQuorum && result > 0 ) { p.recipient.call.value(p.amount)(p.data); p.active = false; } else if (p.quorum > minimumQuorum && result < 0) { p.active = false; } } ProposalTallied(_proposalID, result, p.quorum, p.active); } }');
 
-    var daoCompiled = eth.compile.solidity(daoSource);
-    var daoTx = eth.sendTransaction({data: daoCompiled.Democracy.code, from: eth.accounts[0], gas:2000000});
+    var votingTokenAddress = tokenInstance.address;
+    var minimunQuorum = 10; // Minimun amount of voter tokens the proposal needs to pass
+    var debatingPeriod = 5; // debating period, in minutes;
 
-Wait a minute for the miners to pick them up and then:
+Choose these parameters with care..
 
-    daoAddress = eth.getTransactionReceipt(daoTx).contractAddress
-    eth.getCode(daoAddress)
+    var daoContract = web3.eth.contract(daoCompiled.Democracy.info.abiDefinition);
+    
+    var daoInstance = daoContract.new(
+        votingTokenAddress, 
+        minimunQuorum, 
+        debatingPeriod, 
+        {
+          from:web3.eth.accounts[0], 
+          data:daoCompiled.Democracy.code, 
+          gas: 2000000
+        }, function(e, contract){
+         console.log(e, contract);
+         console.log("Contract mined! \naddress: " + contract.address + "\ntransactionHash: " + contract.transactionHash);
+      })
 
-Wait a minute until the miners pick it up. It will cost you about 0.6 ethers in current market price. Once it's picked up it's time to instantiate it and set it up, by pointing it to the correct address of the token contract you created previously. Let's also register a name for your contract so it's easily accessible (don't forget to check your name availability with registrar.addr("nameYouWant") before reserving!)
 
-    var name = "MyPersonalCountry"
-    registrar.reserve.sendTransaction(name, {from: eth.accounts[0]})
-    var daoInstance = eth.contract(daoCompiled.Democracy.info.abiDefinition).at(daoAddress);
-    daoInstance.setup.sendTransaction(registrar.addr("MyFirstCoin"),{from:eth.accounts[0]})
-
-    daoInstance.setup.sendTransaction(tokenAddress,{from:eth.accounts[0]})
-
-Wait for the previous transactions to be picked up and then:
-
-    registrar.setAddress.sendTransaction(name, daoAddress, true,{from: eth.accounts[0]});
+Wait a minute until the miners pick it up. It will cost you about 850k Gas. Once it's picked up it's time to instantiate it and set it up, by pointing it to the correct address of the token contract you created previously. 
 
 If everything worked out, you can take a look at the whole organization by executing this string:
 
-    "This organization has " +  daoInstance.numProposals() + " proposals and was founded by " +     daoInstance.founder() + " and uses the token at the address " + daoInstance.voterShare() ;
+    "This organization has " +  daoInstance.numProposals() + " proposals and uses the token at the address " + daoInstance.voterShare() ;
 
 If everything is setup then your DAO should return a proposal count of 0 and an address marked as the "founder". While there are still no proposals, the founder of the DAO can change the address of the token to anything it wants. 
+
+### Register your organization name
+
+Let's also register a name for your contract so it's easily accessible (don't forget to check your name availability with registrar.addr("nameYouWant") before reserving!)
+
+    var name = "MyPersonalDemocracy"
+    registrar.reserve.sendTransaction(name, {from: eth.accounts[0]})
+    var daoInstance = eth.contract(daoCompiled.Democracy.info.abiDefinition).at(daoInstance.address);
+    daoInstance.setup.sendTransaction(registrar.addr("MyFirstCoin"),{from:eth.accounts[0]})
+
+Wait for the previous transactions to be picked up and then:
+
+    registrar.setAddress.sendTransaction(name, daoInstance.address, true,{from: eth.accounts[0]});
+
 
 ### The Democracy Watchbots
 
@@ -172,9 +189,9 @@ If everything is setup then your DAO should return a proposal count of 0 and an 
     var eventVote = daoInstance.Voted({}, '', function(error, result){
       if (!error)
         var opinion = "";
-        if (result.args.position > 1) { 
+        if (result.args.position > 0) { 
           opinion = "in favor" 
-        } else if (result.args.position < 1) { 
+        } else if (result.args.position < 0) { 
           opinion = "against" 
         } else { 
           opinion = "abstaining" 
@@ -200,17 +217,25 @@ If everything is setup then your DAO should return a proposal count of 0 and an 
     });
 
 
+    var LineCounterEvent = daoInstance.LineCounter({}, '', function(error, result){
+      if (!error)
+        console.log("Executed line #"+ result.args.line )
+
+    });
+
+
 ### Interacting with the DAO
 
 After you are satisfied with what you want, it's time to get all that ether you got from the crowdfunding and into your new organization:
 
-    eth.sendTransaction({from: eth.accounts[1], to: daoAddress, value: web3.toWei(100, "ether")})
+    eth.sendTransaction({from: eth.accounts[1], to: daoInstance.address, value: web3.toWei(100, "ether")})
 
 This should take only a minute and your country is ready for business! Now, as a first priority, your organization needs a nice logo, but unless you are a designer, you have no idea how to do that. For the sake of argument let's say you find that your friend Bob is a great designer who's willing to do it for only 10 ethers, so you want to propose to hire him. 
 
     recipient = registrar.addr("bob");
     amount =  web3.toWei(10, "ether");
-    shortNote = "Flag Design";
+    shortNote = "Logo Design";
+
     daoInstance.newProposal.sendTransaction( recipient, amount, '', shortNote,  {from: eth.accounts[0], gas:1000000})
 
 After a minute, anyone can check the proposal recipient and amount by executing these commands:
@@ -222,9 +247,9 @@ After a minute, anyone can check the proposal recipient and amount by executing 
 Unlike most governments, your country's government is completely transparent and easily programmable. As a small demonstration here's a snippet of code that goes through all the current proposals and prints what they are and for whom:
 
     function checkAllProposals() {  
-      for (i = 0; i< (Number(daoInstance.numProposals())+1); i++ ) { 
+      for (i = 0; i< (Number(daoInstance.numProposals())); i++ ) { 
     var p = daoInstance.proposals(i)
-    console.log("Proposal #" + i + "  Send " + web3.fromWei( p[1], "ether") + " ether to address " + p[0] + " for "+ p[3] + ".\t Creation Date: "+ Date(p[4]) + " Number of Votes:"+ p[5] + " Quorum:"+ p[6] + " Active? "+ p[7]  ); 
+    console.log("Proposal #" + i + "  Send " + web3.fromWei( p[1], "ether") + " ether to address " + p[0] + " for "+ p[3] + ".\t Creation Date: "+ Date(p[4]) + " Quorum:"+ p[5] + " Active? "+ p[6]  ); 
     }
     }
     checkAllProposals();
@@ -238,11 +263,11 @@ Now of course you want other people to be able to vote on your proposals. You ca
 
 Then anyone who owns any of your tokens can vote on the proposals by doing this:
 
-    var proposalID = 0;
+    var proposalID = 2;
     var position = -1; // +1 for voting yea, -1 for voting nay, 0 abstains but counts as quorum
-    daoInstance.vote.sendTransaction(proposalID, position, {from: eth.accounts[0]});
+    daoInstance.vote.sendTransaction(proposalID, position, {from: eth.accounts[0], gas: 1000000});
 
-    var proposalID = 1;
+    var proposalID = 2;
     var position = 1; // +1 for voting yea, -1 for voting nay, 0 abstains but counts as quorum
     daoInstance.vote.sendTransaction(proposalID, position, {from: eth.accounts[0], gas: 1000000});
 
@@ -250,12 +275,12 @@ Then anyone who owns any of your tokens can vote on the proposals by doing this:
 Unless you changed the basic parameters in the code, any proposal will have to be debated for at least a week until it can be executed. After that anyone—even a non-citizen—can demand the votes to be counted and the proposal to be executed. The votes are tallied and weighted at that moment and if the proposal is accepted then the ether is sent immediately and the proposal. If the votes end in a tie or the minimum quorum hasn’t been reached, the voting is kept open until the stalemate is resolved. If it loses, then it's archived and cannot be voted again.
 
     var proposalID = 0;
-    daoInstance.executeProposal.sendTransaction(proposalID, {from: eth.accounts[0]});
+    daoInstance.executeProposal.sendTransaction(proposalID, {from: eth.accounts[0], gas: 1000000});
 
 
 If the proposal passed then you should be able to see Bob's ethers arriving on his address:
 
-    web3.fromWei(eth.getBalance(daoAddress), "ether") + " ether";
+    web3.fromWei(eth.getBalance(daoInstance.address), "ether") + " ether";
     web3.fromWei(eth.getBalance(registrar.addr("bob")), "ether") + " ether";
 
 

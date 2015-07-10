@@ -43,6 +43,8 @@ For the purposes of this guide, we will focus on the Console, a JavaScript envir
 
 Tip: Typing **web3** will list all the available packages, fields and functions provided by Geth. The most commonly used you should be aware of are the packages: **admin** (administering your node), **pesonal** (managing your accounts), **miner** (handling mining operations) and **eth** (interacting with the blockchain).
 
+**ATTENTION: If you just want to test the technology and play around, DON'T USE THE MAIN NETWORK. Read further to find out how to deploy a private test network without spending your ether.**
+
 
 ### Alternative ways to running 
 
@@ -110,3 +112,20 @@ You now have a variable called primaryAccount that you can use in other calls. T
     eth.getBalance(primaryAccount)
 
  Your balance should return 0, since you just created it. In order to do the next steps you need to have some ether in your account so you can pay the gas costs. In the next section you'll learn what gas is, and how you can interact with the network.
+
+
+### Check All Balances at once
+
+Geth is a javascript environment, that means you can create functions just like you would in javascript. For example, if you want to check the balance of all your accounts at once, use this JavaScript code snippet. It will iterate over each of your accounts and print their balance in ether:
+ 
+    function checkAllBalances() { 
+      var i = 0; 
+      eth.accounts.forEach(function(id) {
+        console.log("eth.accounts["+i+"]: " + id + "\tbalance: " + web3.fromWei(eth.getBalance(id), "ether") + " ether"); 
+        i++;
+      })
+    }; 
+
+Once you executed the line above, all you need to check your whole balance is:
+
+    checkAllBalances() 

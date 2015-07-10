@@ -5,6 +5,8 @@ Ether is a necessary element -- a fuel -- for operating the distributed applicat
 
 Feeling comfortable? Time to get some ether!
 
+**If you just want to test the technology, you probably don't need real ether. [Just deploy a private test net](../geth/) and you will be able get free test ether by mining**.
+
 
 ## Get Ether
 
@@ -80,21 +82,6 @@ Waiting a few seconds, the transaction should be complete. To check the balance 
     eth.getBalance(eth.accounts[0])
 
 
-### Check All Balances at once
-
-If you want to check the balance of all your accounts at once, use this JavaScript code snippet. It will iterate over each of your accounts and print their balance in ether:
- 
-    function checkAllBalances() { 
-      var i = 0; 
-      eth.accounts.forEach(function(id) {
-        console.log("eth.accounts["+i+"]: " + id + "\tbalance: " + web3.fromWei(eth.getBalance(id), "ether") + " ether"); 
-        i++;
-      })
-    }; 
-
-Once you executed the line above, all you need to check your whole balance is:
-
-    checkAllBalances() 
 
 *Try it yourself: tweak this JavaScript function to make it show another unit, like “finney”.*
 
