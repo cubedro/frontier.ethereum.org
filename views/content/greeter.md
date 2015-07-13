@@ -17,31 +17,6 @@ So let's start now.
 
 Now that you’ve mastered the basics of Ethereum, let’s move into your first serious contract. It’s a big open territory and sometimes you might feel lonely, so our first order of business will be to create a little automatic companion to greet you whenever you feel lonely. We’ll call him the “Greeter”.
 
-
-    contract greeter {
-        // Declare variable admin which will store an address
-        address public admin;
-
-        // this function is executed at initialization 
-        // and sets the owner of the contract
-        function greeter() {
-            admin = msg.sender;
-        }
-
-        // main function
-        function greet(bytes32 input) returns (bytes32) {
-            if (input == "") {  return "Hello, World"; }
-            return input; 
-        }
-
-        // Function to recover the funds on the contract
-        function kill() {
-            if (msg.sender == admin) {
-                suicide(admin);
-            }
-        }
-    }
-
 The Greeter is an intelligent digital entity that lives on the blockchain and is able to have conversations with anyone who interacts with it, based on its input. It might not be a talker, but it’s a great listener. Here is it's code:
 
 
